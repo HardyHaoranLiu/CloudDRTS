@@ -1,0 +1,6 @@
+case_id,mode,sigma_per_s,omega_rad_s,damped_frequency_Hz,undamped_frequency_Hz,damping_pct,origin,source
+andes_kundur_full_published_2022,inter_area,-0.19177,4.2247,0.67239,0.67308,4.5346,published_external,https://docs.andes.app/en/v1.9.3/_examples/ex4.html
+andes_kundur_full_published_2022,local_low,-0.65252,6.8343,1.0877,1.0927,9.5046,published_external,https://docs.andes.app/en/v1.9.3/_examples/ex4.html
+andes_kundur_full_published_2022,local_high,-0.6564,7.086,1.1278,1.1326,9.224,published_external,https://docs.andes.app/en/v1.9.3/_examples/ex4.html
+stepss_kundur_pss_enabled,inter_area,,,0.624,,10.9,published_external,https://github.com/SPS-L/stepss-Kundur-Two-Area-System
+stepss_kundur_pss_disabled,inter_area,,,0.625,,-2.3,published_external,https://github.com/SPS-L/stepss-Kundur-Two-Area-System

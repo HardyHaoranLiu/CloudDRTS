@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv*/
+CloudDRTS/results/
+external_run/results/
+external_run/pycode/
+external_run/historical/andes-1.7.5/
+external_run/historical/pycode/
+external_run/logs/
+external_run/figures/
+output/
+qa/

@@ -1,0 +1,10 @@
+{
+  "package": "andes",
+  "version": "1.7.5",
+  "source": "https://pypi.org/pypi/andes/1.7.5/json",
+  "archive": "andes-1.7.5.tar.gz",
+  "sha256": "878e187db89484f6e778ea19f31a8830440f7bef28d4a59e115847d54092b678",
+  "license": "GPL-3.0",
+  "release_commit": "480dab25d879658cb2b77872fa518be02e833585",
+  "observed_reference_output": "1.7.5.post2.dev0+ga53a31fa; 2022-07-05"
+}

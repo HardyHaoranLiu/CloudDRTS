@@ -1,0 +1,27 @@
+{
+  "units": {
+    "voltage": "V",
+    "current": "A",
+    "time": "s"
+  },
+  "direction": "current positive into line at each port",
+  "incoming": "h",
+  "port_relation": "i=v/Z+h",
+  "outgoing": "-2*v/Z-h",
+  "exchange_order": [
+    "read incoming histories",
+    "solve local subsystem",
+    "publish outgoing history"
+  ],
+  "payload": "one scalar outgoing history per direction per step",
+  "physical_delay_s": 0.00025,
+  "artificial_delay_s": "k*dt each direction",
+  "round_trip_added_s": "2*k*dt",
+  "initialization": "zero histories and zero capacitor state for RC toy circuit",
+  "network_implementation": "in-process deterministic queue; no actual network transport",
+  "recommended_future_metadata": [
+    "sample time",
+    "sequence number",
+    "declared validity interval"
+  ]
+}
