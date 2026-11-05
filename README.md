@@ -22,6 +22,8 @@
 
 ## 入口和交付物
 
+本 Git 仓库包含源码、依赖锁、必要案例和第三方许可。下列生成结果、PDF 报告、`ACCEPTANCE_STATUS.json` 和 Git bundle 随完整的 `CloudDRTS_Experiments_v7.zip` 交付，不全部纳入 Git；运行下方入口可重新生成实验结果和说明。
+
 - `CloudDRTS/run_all.py`：完整自编实验和验证入口。
 - `CloudDRTS/dynamic_thevenin.py`：新增独立标量动态等效；不调用原 Circuit / Bergeron 类。
 - `CloudDRTS/results/`：全部本轮自编 CSV、JSON、Nature 风格 PNG/SVG/矢量 PDF；保留上、右边框。
@@ -66,4 +68,4 @@ Windows 将 `.venv/bin/python` 换为 `.venv\Scripts\python.exe`。生成两份�
 
 ## 共享代码
 
-本版提供 Git bundle，可本地克隆并继续推送到双方认可的远端。尚未配置或推送在线仓库，不虚构共享链接。程序包自身包含完整运行结果及说明，Git bundle 保留源码提交和输入来源。
+目标 GitHub 仓库为 https://github.com/HardyHaoranLiu/CloudDRTS ，克隆与复跑方法见 `Git_Reproduction.md`。完整程序包包含运行结果及说明；其中的 Git bundle 保留 v7 源码提交和输入来源，可作为离线副本。
