@@ -16,7 +16,7 @@ cd CloudDRTS_Source_v7
 git log -1
 ```
 
-先按 README 建立自编环境并运行 `CloudDRTS/run_all.py`，再建立独立 ANDES 环境运行 `external_run/run_reproduction.py`。生成阶段说明时需要两边结果及 `requirements_notes.txt`。
+先按 README 建立自编环境并运行 `CloudDRTS/run_all.py`，再建立独立 ANDES 环境运行 `external_run/run_reproduction.py`。生成阶段说明时需要两边结果及 `requirements_notes.txt`；阶段一中英文说明另需 XeLaTeX，命令见 README。
 
 所有代码以相对路径定位。离线 v7 源码提交为 `bc1fe4e5ce3dcb9f4f62cd60a8105631b24b648b`；完整程序包中的 `GIT_SOURCE.json` 记录提交号与逐文件校验值。Git bundle 完整性已经通过 `git bundle verify` 和克隆后逐文件 SHA-256 核对。
 

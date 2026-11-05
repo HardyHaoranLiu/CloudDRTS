@@ -27,7 +27,8 @@
 - `CloudDRTS/run_all.py`：完整自编实验和验证入口。
 - `CloudDRTS/dynamic_thevenin.py`：新增独立标量动态等效；不调用原 Circuit / Bergeron 类。
 - `CloudDRTS/results/`：全部本轮自编 CSV、JSON、Nature 风格 PNG/SVG/矢量 PDF；保留上、右边框。
-- `output/pdf/Phase1_Dynamics_Note.pdf`：阶段一两页说明。
+- `output/pdf/Phase1_Note_EN.pdf`、`output/pdf/Phase1_Note_ZH.pdf`：阶段一两页说明，英文、中文各一份，IEEE 会议双栏排版；由 `phase1_note/build_phase1_note.py` 生成，正文数字全部取自结果文件。
+- `CloudDRTS/phase1_sensitivity.py`：复算文献 [2] 表 1、表 2 的四个对称工况，对照教材网络与原文无升压变压器网络，并扫描升压电抗和补偿量（只扫描，不拟合）。
 - `output/pdf/Phase3_Partitioning_Note.pdf`：阶段三三页说明。
 - `Phase2_Validation.md`：阶段二验证表与适用范围。
 - `Phase4_Questions.md`：本轮实测性能与第一周讨论清单。
@@ -58,9 +59,23 @@ python3.12 -m venv .venv-andes
 
 Git 源码交付不带所有大体积输出；首次从源码复跑请先运行自编完整入口，再运行 ANDES 入口。若仅运行 ANDES，追加 `--rerun-local-transient` 可先生成其依赖的自编故障波形。
 
-Windows 将 `.venv/bin/python` 换为 `.venv\Scripts\python.exe`。生成两份新说明另安装 `requirements_notes.txt`，再执行 `python build_delivery_notes.py`。
+Windows 将 `.venv/bin/python` 换为 `.venv\Scripts\python.exe`。生成阶段三说明另安装 `requirements_notes.txt`，再执行 `python build_delivery_notes.py`。
+
+阶段一中英文说明需要 XeLaTeX（IEEEtran、ctex/xeCJK、siunitx）以及 TeX Gyre Termes、Noto Serif CJK SC 字体；先完成上面两个入口，再在自编环境中执行：
+
+```bash
+.venv/bin/python -m pip install -r requirements_notes.txt
+.venv/bin/python phase1_note/build_phase1_note.py
+```
+
+构建会检查：页数为 2、LaTeX 无未定义引用或溢出、ANDES 比较所用波形与本次 `detailed_fault.csv` 哈希一致，以及正文结论对应的数值条件。
 
 ## 实验 1 剩余问题的准确范围
+
+已对照原文核实（`CloudDRTS/phase1_sensitivity.py`，结果在 `results/phase1_sensitivity.json`）：表 2 的 0.481 Hz、0.023 是手动励磁、1 回联络线、零传输工况，与 v7 的单回联络线一致；原文没有给出本地模态数值。按附录 A 加入快速静止励磁（KA=200、TR=0.01 s、无 TGR）后计算原文表 1、表 2 的四个工况：教材网络（0.15 p.u. 升压变压器）与原文图 1 的无升压变压器网络，把四个已发表的频率和阻尼比全部夹在中间；每区补偿 100–350 Mvar 只使频率在约 0.415–0.441 Hz 内变化，四阶与六阶只差约 0.001 Hz。差距主要来自原文未给出的机组接入阻抗；没有拟合或采用任何电抗值。
+
+已对照 Kundur 教材例 12.6（第 813–816 页）核实：系统、负荷、补偿和运行点数据与代码一致；表 E12.3 的 0.545/1.087/1.117 Hz、阻尼比 0.032/0.072/0.072 及本地模态的区域归属与代码参考值一致。例题计入饱和，按其饱和数据计算，频率差在约 1.1% 以内，表 E12.4(ii) 晶闸管励磁的三个频率差在约 0.7% 以内，且同样得到不稳定的区间模态；本地模态阻尼比高约 1.3–1.4 个百分点的原因已查明：教材采用经典参数换算的等效电路机组模型（不计饱和时与本仓库的 GENROU 模型特征值一致），并在小干扰分析中用增量饱和系数 1/(1+Bsat·ψI) 线性化两轴饱和；GENROU 的割线饱和与之不同。`CloudDRTS/textbook_reproduction.py` 按教材方法复现了表 E12.3 全部 24 个特征值（最大差 0.012 s⁻¹，来自书中虚部 6.82 的印刷舍入）和表 E12.4 的 (ii)、(iii) 两种励磁（差 ≤0.004 s⁻¹）；(iv) 加 PSS 时最多差约 0.10 s⁻¹，原因未明；(i) 直流励磁未建模。ANDES 与本仓库模型没有错误。不计饱和的基本工况有一个 +0.0049 s⁻¹ 的缓慢实特征值（ANDES 同样给出），计入饱和后消失；`results/detailed_checks.json` 和 `external_run/results/modal_comparison_checks.json` 记录全部正实部特征值。
+
 
 原论文表 2 的零传输、手动励磁区域间频率为 0.481 Hz、阻尼比 0.023；现有对称暂定配置约为 0.425546 Hz、4.475%，频率差约 -11.53%。原文使用恒阻抗负荷，已有对称测试已作该设置。补偿和磁路/饱和的完整对应尚未唯一确定，不能以临时开放基准替代对原论文的解释。
 

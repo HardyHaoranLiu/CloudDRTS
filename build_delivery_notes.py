@@ -32,7 +32,7 @@ class Note:
     def save(self,name,count):
         assert len(self.doc)==count
         for i,p in enumerate(self.doc,1):
-            p.insert_font(fontname=f'Page{i}',fontfile=findfont('DejaVu Sans'))
+            p.insert_font(fontname=f'Page{i}',fontfile=str(findfont('DejaVu Sans')))
             p.insert_text((531,785),str(i),fontname=f'Page{i}',fontsize=9)
         target=OUT/name;self.doc.save(target,garbage=4,deflate=True)
         qa=ROOT/'qa'/target.stem;qa.mkdir(parents=True,exist_ok=True)
@@ -41,37 +41,12 @@ class Note:
         print(target)
 
 def main():
-    modal=[r for r in rows(RES/'detailed_modes.csv') if r['case']=='textbook' and r['saturation']=='none']
-    paper=next(r for r in rows(RES/'detailed_modes.csv') if r['case']=='paper_symmetric' and r['saturation']=='none')
-    ext=info(EXT/'results/verification_summary.json')
     dynamic=info(RES/'dynamic_thevenin_checks.json')
     event=info(RES/'event_validation.json');audit=info(RES/'audit_checks.json')
     timing=rows(RES/'timing.csv');grid=rows(RES/'grid_cut_metrics.csv')
     reduced=rows(RES/'dynamic_thevenin_metrics.csv')
 
-    n=Note();n.start('阶段一｜机电模态与故障','两页实验记录：六阶机组、三相故障、三个机电模态，以及对文献和外部软件的比较。当前结论明确区分同参数验证与原论文工况复现。')
-    n.heading('模型、工作点和模态识别')
-    n.text('十一母线、四台 900 MVA 机组，系统基准 100 MVA / 60 Hz；手动励磁、固定机械转矩、无饱和。每台机保留转角、转速和四个电磁状态。教材型工作点的动态负荷采用有功恒电流、无功恒阻抗。区域间模态由两区转速相位识别，两个局部模态由同区机组反向运动识别。')
-    n.table(['模态','频率 / Hz','实部 / s⁻¹','阻尼 / %'],[[label,f'{float(r["frequency_Hz"]):.6f}',f'{float(r["sigma_per_s"]):.6f}',f'{float(r["damping_pct"]):.4f}'] for label,r in zip(['区域间','局部低频','局部高频'],modal)])
-    n.graph(EXT/'figures/matched_modes.pdf',174)
-    n.note('图 1　与 ANDES 1.9.3 的十一母线同参数案例比较；三个频率重合。全部图保留上、右边框。')
-    n.text('最大频差 6.55×10⁻⁷ Hz，最大复特征值差 4.13×10⁻⁶ s⁻¹，最大母线电压幅值差 6.53×10⁻⁷ p.u.。ANDES 在线路 r/x 中各增加 10⁻⁸ p.u. 正则项，现有程序保留原始物理输入。')
-    n.heading('临时外部基准的来源与版本')
-    n.text('ANDES 官方十母线 full 案例含 EXDC2 与 TGOV1，不能与上面的手动励磁案例混同。1.7.5 实跑频率为 0.6723886、1.0877054、1.1277652 Hz，复现网页历史输出的舍入精度。同一输入在 1.9.3 中会得到不同结果，因此固定软件版本是复跑条件。')
-    n.note('来源：<a href="https://docs.andes.app/en/v1.9.3/_examples/ex4.html">ANDES 官方模态示例</a>；模型参数背景：<a href="https://colib.net/testCases/kundur_two_area_system/">CoLib Kundur 案例</a>。完整原始报告和实际依赖在 external_run/。')
-
-    n.start('阶段一｜时域与剩余差异','母线 8 在 1.00–1.08 s 投入纯电阻 10⁻⁴ p.u. 的三相故障，仿真至 12 s。转角均相对初始状态并减去惯量中心。')
-    n.graph(EXT/'figures/fault_overlay.pdf',250)
-    n.note('图 2　自编 DOP853 与 ANDES 0.5 ms 结果。精确事件行使用各自的右极限；全部 2401 个比较点均计入误差。')
-    n.text('ANDES 0.5 ms 的最大转角差 0.0001926°、频差 6.22×10⁻⁶ Hz、电压差 1.58×10⁻⁶ p.u.、联络有功差 0.00254 MW。默认 ANDES 深故障流程失败，以上结果来自明示的事件一致性适配；其事件全代数残差低于 10⁻¹¹，微分状态不跳变。')
-    n.heading('与原论文 [2] 的比较尚未闭合')
-    n.table(['比较对象','当前计算','参考值与差异'],[
-        ['对称、单回、零传输、手动励磁',f'{float(paper["frequency_Hz"]):.6f} Hz；阻尼 {float(paper["damping_pct"]):.3f}%',f'论文表 2：0.481 Hz、2.3%；频率差 {float(paper["frequency_error_pct"]):+.2f}%'],
-        ['教材型工作点阻尼','3.578%、8.515%、8.409%','已有教材参考为 3.2%、7.2%、7.2%；尚未解释全部差异']])
-    n.text('论文对应测试采用恒阻抗负荷；本包对称测试已单独设置该负荷和四台相同惯量。每区 200 Mvar 补偿仍属暂定输入，完整补偿工况、磁路及饱和对应尚未唯一确定。本轮再次核对原文，不能把临时 ANDES 一致性替代论文一致性，也不通过调参强行贴合 0.481 Hz。')
-    n.note('原论文：Klein、Rogers、Kundur，1991，IEEE TPWRS 6(3), 914–921，<a href="https://doi.org/10.1109/59.119229">doi:10.1109/59.119229</a>。公开原文可见 Iowa State 大学教学镜像。实践计算与差异说明已可提交；精确原工况验收保持“部分完成”。')
-    n.save('Phase1_Dynamics_Note.pdf',2)
-
+    # Phase 1 notes (Chinese and English) are built by phase1_note/build_phase1_note.py.
     n=Note();n.start('阶段三｜接口、延迟与等效','三页实验记录：同一个 Bergeron 小电路、相同初态和投切事件，分别比较历史项交换、静态戴维南近似和保留电容状态的动态等效。')
     n.heading('边界合同与两种戴维南模型')
     n.text('两端电流均定义为流入线路：i = v/Z + h；每端发布的出射历史为 −2v/Z − h。只交换线路历史，不传送内部状态。Z=50 Ω，物理传播时间 250 µs；每个方向另加 kΔt 的人工延迟，双向往返附加量为 2kΔt。')
@@ -121,8 +96,9 @@ def main():
             miss_pct_range=[min(float(r['miss_pct']) for r in rr),max(float(r['miss_pct']) for r in rr)],
             max_us=max(float(r['max_us']) for r in rr),runs=len(rr),steps_each=4000)
     matrix=dict(
-        phase1=dict(status='partial_reference_alignment',practice='fault, linearization, three modes, external matched-case check and two-page note complete',
-          unresolved='original-paper operating point/magnetic model alignment and textbook damping difference'),
+        phase1=dict(status='partial_reference_alignment',practice='fault, linearization, computed mode labels, external matched-case check, sensitivity sweep and two-page notes (zh, en) complete',
+          notes=['output/pdf/Phase1_Note_EN.pdf','output/pdf/Phase1_Note_ZH.pdf'],
+          unresolved='original-paper operating point and textbook damping difference; see CloudDRTS/results/phase1_sensitivity.json'),
         phase2=dict(status='practice_checks_passed',checks=['RC/RL/RLC analytic validation','50 and 5 us plus refinements',
           'Bergeron reflection','switch event state continuity','LC energy','eight invalid input regressions'],
           emt_external_software='not performed; not required by onboarding plan'),

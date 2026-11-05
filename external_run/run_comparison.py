@@ -63,6 +63,8 @@ def main():
       matched_voltage_max_abs_difference_pu=float(max(abs(va-abs(kd.V0)))),
       numerical_line_regularization='ANDES 1.9.3 adds 1e-8 to each branch r and x',
       small_eigenvalues=[dict(real=float(z.real),imag=float(z.imag)) for z in model.EIG.mu if abs(z)<1e-4],
+      max_real_eigenvalue=float(np.max(np.real(model.EIG.mu))),
+      positive_real_eigenvalues=[float(z.real) for z in model.EIG.mu if z.real>1e-3],
       acceptance=dict(freq_abs_tol_Hz=1e-5,eigen_abs_tol_per_s=1e-4,passed=True),
       environment_serial_cpu_override='psutil.cpu_count -> 1 because /proc/cpuinfo is absent; model equations unmodified')
     (OUT/'modal_comparison_checks.json').write_text(json.dumps(summary,indent=2))

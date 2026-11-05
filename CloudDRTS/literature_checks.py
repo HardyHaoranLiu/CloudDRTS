@@ -52,13 +52,33 @@ class Case:
         ix=sorted(np.where((ev.imag>1)&(ev.imag<12))[0],key=lambda i:ev[i].imag)
         return ev[ix],vec[:,ix]
 
-def symmetric():
-    # Figure 5 test 2A's macroconditions: identical areas, 1 tie, no power transfer.
+def symmetric(compensation_pu=2.0,tie_circuits=1,transformer_x_pu=.15):
+    """Symmetric, zero-transfer case of [2] (Table 2: 1400 MW / 1367 MW per area).
+
+    compensation_pu: shunt capacitor at each load bus (bus 7 and bus 9), on
+    the 100 MVA base; 2.0 p.u. = 200 Mvar is the tentative v7 value ([2] only
+    says capacitors were added as needed).
+    tie_circuits: parallel 220 km circuits between the areas (1 to 3). [2]
+    Fig. 1 shows 3 x 0.22; its Table 2 manual-exciter case has 1 in service.
+    transformer_x_pu: generator step-up reactance on the 900 MVA machine base.
+    0.15 is the textbook network [1]; [2] Fig. 1 draws no step-up transformers
+    and gives no transformer data, approximated here by a small value.
+    Defaults reproduce the v7 case exactly.
+    """
+    if tie_circuits not in (1,2,3):
+        raise ValueError('tie_circuits must be 1, 2 or 3.')
+    if transformer_x_pu<=0:
+        raise ValueError('transformer_x_pu must be positive; use 1e-4 to approximate no transformer.')
     Y=kd.Y.copy()
-    Y[8,8]-=1.5j
+    Y[6,6]+=1j*(compensation_pu-2.0)
+    Y[8,8]+=1j*(compensation_pu-3.5)
+    extra=tie_circuits-2  # kd.Y holds two circuits on each 110 km section 7-8 and 8-9
+    g=1/(110*(.0001+.001j));bc=1j*110*.00175/2
     for a,b in [(6,7),(7,8)]:
-        g=1/(110*(.0001+.001j));bc=1j*110*.00175/2
-        Y[a,a]-=g+bc;Y[b,b]-=g+bc;Y[a,b]+=g;Y[b,a]+=g
+        Y[a,a]+=extra*(g+bc);Y[b,b]+=extra*(g+bc);Y[a,b]-=extra*g;Y[b,a]-=extra*g
+    change=9/(1j*transformer_x_pu)-9/(1j*.15)
+    for a,b in [(0,4),(1,5),(2,10),(3,9)]:
+        Y[a,a]+=change;Y[b,b]+=change;Y[a,b]-=change;Y[b,a]-=change
     load=np.zeros(11,complex);load[[6,8]]=13.67+1j
     angle_ix=np.array([1,3,4,5,6,7,8,9,10])
     def volts(z):
@@ -70,7 +90,8 @@ def symmetric():
         p=S.real[angle_ix].copy();p[:2]-=7
         return np.r_[p,S.imag[4:]]
     sol=root(mismatch,np.r_[np.zeros(9),np.ones(7)],tol=1e-11)
-    assert max(abs(sol.fun))<1e-9
+    if max(abs(sol.fun))>1e-9:
+        raise RuntimeError('Symmetric power flow did not converge.')
     v=volts(sol.x)
     return Case(Y,load,v,np.full(4,6.5),2)
 

@@ -1,0 +1,124 @@
+% Phase 1 note (English). Build with phase1_note/build_phase1_note.py.
+\documentclass[conference,letterpaper]{IEEEtran}
+\usepackage{mathptmx}
+\usepackage[no-math]{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{mode=match,reset-text-series=false,reset-text-shape=false,text-series-to-math=true,retain-explicit-plus=true,exponent-product=\times,group-digits=false}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\input{values.tex}
+\hyphenation{ANDES}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovedisplayskip}{4pt}\setlength{\belowdisplayskip}{4pt}
+
+\begin{document}
+\title{Electromechanical Modes and Fault Response of the\\Kundur Two-Area System}
+\author{\IEEEauthorblockN{Haoran Liu}
+\IEEEauthorblockA{CloudDRTS preparation plan, Phase~1 output\quad November 2026}}
+\maketitle
+
+\begin{abstract}
+The two-area, four-machine benchmark is built in Python with six-state machines, subjected to a three-phase fault, and linearized numerically. The inter-area mode is \VfIA~Hz with \VzIA\,\% damping, and the local modes are \VfLA\ and \VfLB~Hz; an independent ANDES model agrees to \Vandesdf~Hz. With the machine model and saturation treatment of~\cite{kundur}, all 24 eigenvalues of its Table~E12.3 are reproduced. For the symmetric case of~\cite{klein}, the inter-area mode is \Vfsym~Hz against the published 0.481~Hz. Computing all four tabulated cases of~\cite{klein} shows that the textbook network and the network of~\cite{klein}, which has no step-up transformers, bracket every published frequency and damping ratio.
+\end{abstract}
+\begin{IEEEkeywords}
+Inter-area oscillation, modal analysis, small-signal stability, two-area system.
+\end{IEEEkeywords}
+
+\section{Task and Scope}
+Phase~1 of the plan asks for the two-area system~\cite{kundur,klein}, a three-phase fault, a linearized model, identification of the inter-area and the two local modes, and a comparison with~\cite{klein}. All values below are read from the result files of the code at commit \texttt{\Vcommit}.
+
+\section{Model and Method}
+\subsubsection*{Network and operating point}
+The system has 11 buses, four 900-MVA units on a 100-MVA, 60-Hz base, lines with $r=0.0001$, $x=0.001$ and $b=0.00175$~p.u./km, loads of $967+j100$ and $1767+j100$~MVA at buses 7 and 9, and 200 and 350~Mvar of shunt compensation. Units~2--4 deliver 700, 719 and 700~MW, and unit~1 is the slack. The power flow converges to a residual of \Vpfres~p.u. and carries \Vtie~MW from bus~7 towards bus~8.
+
+\subsubsection*{Machine and load models}
+Each unit uses a six-state round-rotor model ($\delta$, $\Delta\omega$, $e'_q$, $e'_d$ and two damper fluxes) with the parameters of~\cite{kundur}. Excitation is manual (constant $E_{fd}$), mechanical torque is constant, and saturation is neglected in the base case; the saturation data of~\cite{kundur} are used for the comparison with~\cite{kundur}. Active load is constant current and reactive load is constant impedance. A two-axis (four-state) model is kept as a baseline.
+
+\subsubsection*{Linearization and mode identification}
+The state matrix $A=\partial f/\partial x$ is formed by central differences at the equilibrium, where the residual is \Veqres. Halving the step changes no eigenvalue by more than \Vjacdiff~s$^{-1}$. Electromechanical modes are those with $1<\operatorname{Im}\lambda<12$~rad/s. Let $\hat v$ be the speed mode shape of G1--G4, normalized to its largest entry. A mode is labelled inter-area when
+\begin{equation}
+\bigl|\tfrac{\hat v_1+\hat v_2}{2}-\tfrac{\hat v_3+\hat v_4}{2}\bigr|>\max\bigl(|\hat v_1-\hat v_2|,\,|\hat v_3-\hat v_4|\bigr),
+\end{equation}
+and otherwise it is local to the area with the larger internal difference. The labels are computed and checked in code; they are not assigned by sorting.
+
+\subsubsection*{Fault}
+A three-phase fault ($R_f=10^{-4}$~p.u.) is applied at bus~8 from 1.00 to 1.08~s. The equations are integrated with DOP853 (relative tolerance $10^{-8}$) and restarted at each switching instant.
+
+\section{Results}
+\subsection{Electromechanical modes}
+\begin{table}[!t]
+\caption{Electromechanical Modes, Given as $f$~(Hz)\,/\,$\zeta$~(\%)}
+\label{tab:modes}
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Mode & No saturation & Method of~\cite{kundur} & \cite{kundur}, Table E12.3\\
+\midrule
+Inter-area & \VfIA\,/\,\VzIA & \VfrIA\,/\,\VzrIA & \VfrefIA\,/\,\VzrefIA\\
+Local, area 1 & \VfLA\,/\,\VzLA & \VfrLA\,/\,\VzrLA & \VfrefLA\,/\,\VzrefLA\\
+Local, area 2 & \VfLB\,/\,\VzLB & \VfrLB\,/\,\VzrLB & \VfrefLB\,/\,\VzrefLB\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_modes_en.pdf}
+\caption{Speed mode shapes (no saturation), normalized to the largest entry.}
+\label{fig:modes}
+\end{figure}
+Table~\ref{tab:modes} and Fig.~\ref{fig:modes} show the three modes. In the inter-area mode, G1 and G2 swing against G3 and G4. Each local mode is dominated by the two units of one area moving in opposition, which matches the mode shapes and area assignment of~\cite{kundur}.
+
+Example~12.6 of~\cite{kundur} includes saturation ($A_{sat}=0.015$, $B_{sat}=9.6$, $\psi_{T1}=0.9$). Its small-signal analysis uses the equivalent-circuit machine with the classical parameter conversion, which without saturation has the same eigenvalues as the model above (to \Vequiv~s$^{-1}$), and it linearizes saturation with the incremental factor $1/(1+B_{sat}\psi_I)$ on both axes. With this treatment (Table~\ref{tab:modes}, column~3), all 24 eigenvalues of~\cite[Table E12.3]{kundur} are reproduced. The largest difference, \Veonetwothree~s$^{-1}$, is in the area-1 mode, whose printed imaginary part 6.82 lies below the 6.83~rad/s implied by the printed 1.087~Hz. Cases (ii) and (iii) of~\cite[Table E12.4]{kundur} agree to \Vthydiff~s$^{-1}$; with a PSS (iv), differences of up to \Vpssdiff~s$^{-1}$ remain unexplained. With the secant saturation of GENROU instead, the local-mode damping is about 8.5\,\%; the saturation treatment alone accounts for this difference.
+
+ANDES~1.9.3~\cite{andes} with identical parameters matches the three eigenvalues to \Vandeseig~s$^{-1}$ and the bus voltages to \Vandesv~p.u., and the nonlinear model follows each modal prediction to within \Vmodalerr\,\% of the initial displacement. Without saturation the model has one slow real eigenvalue, \Vposnone~s$^{-1}$ (ANDES: \Vposandes~s$^{-1}$), an aperiodic drift with a time constant of about \Vtau~s that a 12-s run does not show; with the method of~\cite{kundur}, all eigenvalues except the two zero ones are stable, as in~\cite{kundur}.
+
+\subsection{Fault response}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_fault_en.pdf}
+\caption{Bus-8 fault, 1.00--1.08~s (shaded): (a) rotor angles relative to the centre of inertia (COI), (b) tie-line power, (c) COI frequency deviation. Dashed: ANDES with a 0.5-ms step.}
+\label{fig:fault}
+\end{figure}
+Before the fault, the largest speed deviation is \Vprefault~Hz, which confirms a consistent initial state. During the fault, the bus-8 voltage falls to \Vvmin~p.u. (Fig.~\ref{fig:fault}). The post-fault swing is dominated by the inter-area mode and decays. Against ANDES, the largest differences are \Vandesang\,\si{\degree} in angle, \Vandesfreq~Hz in speed and \Vandestie~MW in tie power.
+
+The COI frequency settles \Vcoidf~Hz above nominal because the model has no governor and no damping term, so the angles in Fig.~\ref{fig:fault}(a) are plotted relative to the COI.
+
+\section{Comparison with Klein, Rogers, and Kundur}
+\begin{table}[!t]
+\caption{Inter-Area Mode of the Symmetric Zero-Transfer Cases of~\cite{klein}, Given as $f$~(Hz)\,/\,$\zeta$~(\%)}
+\label{tab:klein}
+\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Exciter, ties & \cite{klein} & Network of~\cite{kundur} & No transformer\\
+\midrule
+Manual, 1 & \VrefM & \VtbM & \VntM\\
+Fast, 1 & \VrefFa & \VtbFa & \VntFa\\
+Fast, 2 & \VrefFb & \VtbFb & \VntFb\\
+Fast, 3 & \VrefFc & \VtbFc & \VntFc\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_sensitivity_en.pdf}
+\caption{Inter-area mode of the four cases in Table~\ref{tab:klein} versus the step-up transformer reactance. Dotted lines: values of~\cite{klein}; diamonds: where each curve reaches them. Nothing is fitted.}
+\label{fig:sens}
+\end{figure}
+For the symmetric system with 1400~MW of generation and 1367~MW of constant-impedance load per area, Table~2 of~\cite{klein} gives 0.481~Hz and a damping ratio of 0.023 with manual excitation and one tie circuit; Table~1 gives it with fast static exciters and three, two or one tie circuits. These values and test conditions were checked against the paper. Because~\cite{klein} reports no local-mode values, the local modes are compared with~\cite{kundur} only (Table~\ref{tab:modes}).
+
+On the network of~\cite{kundur} with one tie circuit and 200~Mvar per area, the mode is \Vfsym~Hz (\Vdfsym\,\%) with \Vzsym\,\% damping, and the two-axis model gives \Vfsymtwo~Hz. Without saturation this case also has a slow real eigenvalue of \Vpossym~s$^{-1}$; with the saturation of~\cite{kundur} it vanishes, and the inter-area frequency changes by only \Vsymsat~Hz. Shunt compensation from 100 to 350~Mvar per area moves the frequency only within \Vcomplo--\Vcomphi~Hz. One network difference remains: Fig.~1 of~\cite{klein} draws the units directly on the area buses and gives no transformer data, whereas the network of~\cite{kundur} has 0.15-p.u. step-up transformers.
+
+Table~\ref{tab:klein} therefore computes the four tabulated cases for both networks, using the exciter of~\cite[App.~A]{klein} ($K_A=200$, $T_R=0.01$~s, no transient gain reduction). In every case the two networks bracket both the published frequency and the published damping ratio. Fig.~\ref{fig:sens} sweeps the step-up reactance between them. The three fast-exciter frequencies are reached at \Vxtfastlo--\Vxtfasthi~p.u. and the manual one at \VxtM~p.u. This points to the generator connection impedance, which~\cite{klein} does not state, as the main source of the gap. No reactance is fitted or adopted, and closing the comparison exactly requires the original input data of~\cite{klein}.
+
+\section{Limitations and Next Steps}
+The model has no PSS or governor and, outside Table~\ref{tab:klein}, no AVR. Next steps: agree whether the network of~\cite{kundur} or of~\cite{klein} becomes the reference, and use it for the partitioned EMT study of Phase~3.
+
+\begin{thebibliography}{1}
+\bibitem{kundur} P.~Kundur, \emph{Power System Stability and Control}. New York, NY, USA: McGraw-Hill, 1994.
+\bibitem{klein} M.~Klein, G.~J. Rogers, and P.~Kundur, ``A fundamental study of inter-area oscillations in power systems,'' \emph{IEEE Trans. Power Syst.}, vol.~6, no.~3, pp.~914--921, Aug. 1991.
+\bibitem{andes} H.~Cui, F.~Li, and K.~Tomsovic, ``Hybrid symbolic-numeric framework for power system modeling and analysis,'' \emph{IEEE Trans. Power Syst.}, vol.~36, no.~2, pp.~1373--1384, Mar. 2021.
+\end{thebibliography}
+\end{document}

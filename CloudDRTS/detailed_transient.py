@@ -50,6 +50,9 @@ def main():
     angle=np.rad2deg(x[:,:4]-model.x[:4])
     angle-=np.average(angle,axis=1,weights=kd.H)[:,None]
     tie=(v[:,6]*np.conj((v[:,6]-v[:,7])*2/(110*(.0001+.001j)))).real*100
+    # Inertia-weighted (COI) frequency deviation, summarised in the JSON only:
+    # external_run/analyze_results.py compares every column of this CSV.
+    coi_df=np.average(x[:,4:8]*60,axis=1,weights=kd.H)
     table('detailed_fault',['t_s',*[f'G{k}_coi_deg' for k in range(1,5)],
           *[f'G{k}_df_Hz' for k in range(1,5)],'V8_pu','P7to8_MW'],
           np.column_stack([t,angle,x[:,4:8]*60,abs(v[:,7]),tie]))
@@ -61,5 +64,8 @@ def main():
     figure(fig,'detailed_fault')
     (OUT/'detailed_transient_checks.json').write_text(json.dumps(dict(
         max_modal_state_error_ratio=max(r[2] for r in errors),
-        minimum_fault_V8_pu=float(min(abs(v[:,7])))),indent=2))
+        minimum_fault_V8_pu=float(min(abs(v[:,7]))),
+        prefault_max_speed_deviation_Hz=float(np.max(abs(x[t<1,4:8]))*60),
+        final_COI_df_Hz=float(coi_df[-1]),
+        COI_df_note='No governor and no damping term: post-fault COI frequency does not return to 60 Hz.'),indent=2))
 if __name__=='__main__':main()

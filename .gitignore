@@ -10,3 +10,5 @@ external_run/logs/
 external_run/figures/
 output/
 qa/
+phase1_note/build/
+external_run/matplotlib/

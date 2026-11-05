@@ -74,6 +74,23 @@ def rhs(x,z):
     return np.r_[W*w,(pm-pe)/(2*H),(efd-eq-(XD-XDP)*id_)/8,
                  (-ed+(XQ-XQP)*iq)/.4]
 
+def mode_label(shape):
+    """Classify a G1..G4 speed mode shape as inter-area, area-1 or area-2.
+
+    Inter-area: the two area averages differ more than the machines within
+    either area. Otherwise the area whose two machines differ most is local;
+    when both areas swing internally to a similar degree (identical areas),
+    the local mode belongs to both and is labelled 'local-both-areas'.
+    """
+    s=np.asarray(shape,complex)
+    s=s/s[np.argmax(abs(s))]
+    a,b=abs(s[0]-s[1]),abs(s[2]-s[3])
+    if abs(s[:2].mean()-s[2:].mean())>max(a,b):
+        return 'inter-area'
+    if min(a,b)>.5*max(a,b):
+        return 'local-both-areas'
+    return 'area-1' if a>b else 'area-2'
+
 def main():
     assert max(abs(rhs(x0,normal))) < 1e-8
     def jac(h):
@@ -82,12 +99,12 @@ def main():
     other = eig(jac(5e-6),right=False)
     modes = sorted(np.where((vals.imag>2) & (vals.imag<12))[0],key=lambda j:vals[j].imag)
     assert len(modes)==3
+    assert sorted(mode_label(vec[4:8,j]) for j in modes)==['area-1','area-2','inter-area']
     rows=[]
     for j in modes:
         s=vec[4:8,j].copy()
         s/=s[np.argmax(abs(s))]
-        a,b = abs(s[0]-s[1]),abs(s[2]-s[3])
-        label = 'inter-area' if abs(s[:2].mean()-s[2:].mean())>max(a,b) else ('area-1' if a>b else 'area-2')
+        label = mode_label(s)
         rows.append([label,vals[j].real,vals[j].imag,vals[j].imag/(2*np.pi),-100*vals[j].real/abs(vals[j]),
                      *abs(s),*np.angle(s,deg=True),min(abs(other-vals[j]))])
     table('modes',['mode','sigma_per_s','omega_rad_s','freq_Hz','damping_pct',

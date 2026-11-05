@@ -71,16 +71,67 @@ class Detailed:
                      (-id_*(XD1-XL)+e1q-e2d)/.03,
                      (iq*(XQ1-XL)+e1d-e2q)/.05]
 
+    def state_matrix(self,h=1e-5):
+        return np.column_stack([(self.rhs(self.x+e)-self.rhs(self.x-e))/(2*h)
+                                for e in np.eye(24)*h])
+
+    def spectrum(self,h=1e-5):
+        """All 24 eigenvalues, used to check slow aperiodic modes as well."""
+        return eig(self.state_matrix(h),right=False)
+
     def modes(self,h=1e-5):
-        A=np.column_stack([(self.rhs(self.x+e)-self.rhs(self.x-e))/(2*h)
-                           for e in np.eye(24)*h])
-        vals,vec=eig(A)
+        vals,vec=eig(self.state_matrix(h))
         ix=sorted(np.where((vals.imag>1)&(vals.imag<12))[0],key=lambda i:vals[i].imag)
         if len(ix)!=3:raise RuntimeError('Expected three electromechanical modes.')
         return vals[ix],vec[:,ix]
 
+def static_exciter_modes(model,KA=200.,TR=.01,h=1e-6):
+    """Electromechanical modes with a thyristor (static) exciter on every unit.
+
+    Efd = KA (Vref - Vm), dVm/dt = (Vt - Vm)/TR, no transient gain reduction;
+    [1] Table E12.4(ii) and [2] Appendix A use KA = 200, TR = 0.01 s. Limits are
+    not active in a small-signal study; Vref keeps the manual equilibrium.
+    Returns the three modes sorted by frequency with their speed mode shapes.
+    """
+    vt0=abs(model.electrical(model.x,True)[-1][:4]);efd0=model.efd.copy();vref=vt0+efd0/KA
+    x0=np.r_[model.x,vt0]
+    def f(x):
+        xs,vm=x[:24],x[24:]
+        vt=abs(model.electrical(xs,True)[-1][:4])
+        model.efd=KA*(vref-vm)
+        try:
+            return np.r_[model.rhs(xs),(vt-vm)/TR]
+        finally:
+            model.efd=efd0
+    if max(abs(f(x0)))>1e-7:raise RuntimeError('Exciter equilibrium is inconsistent.')
+    A=np.column_stack([(f(x0+e)-f(x0-e))/(2*h) for e in np.eye(28)*h])
+    vals,left,vec=eig(A,left=True)
+    participation=abs(left.conj()*vec)
+    mechanical=participation[:8].sum(0)/participation.sum(0)
+    ix=sorted([i for i in range(28) if .5<vals[i].imag<12 and mechanical[i]>.5],key=lambda i:vals[i].imag)
+    if len(ix)!=3:raise RuntimeError(f'Expected three electromechanical modes, found {len(ix)}.')
+    return vals[ix],vec[4:8][:,ix]
+
+# Reference values keyed by the computed mode label (frequency Hz, damping %),
+# all checked against the sources.
+# textbook: Kundur [1] Example 12.6, Table E12.3, manual excitation; [1] identifies
+# 1.087 Hz as the area-1 (G1 vs G2) mode and 1.117 Hz as the area-2 mode. The
+# example includes saturation (Asat 0.015, Bsat 9.6, psiT1 0.9), i.e. the
+# 'kundur_exponential' variant here. That variant applies secant (GENROU-type)
+# saturation; textbook_reproduction.py uses the incremental treatment of [1] and
+# reproduces Tables E12.3 and E12.4 eigenvalue by eigenvalue.
+# paper_symmetric: Klein, Rogers and Kundur [2], Table 2, manual excitation, one tie
+# circuit, zero transfer. [2] gives no local-mode values.
+REFERENCES={'textbook':{'inter-area':(.545,3.2),'area-1':(1.087,7.2),'area-2':(1.117,7.2)},
+            'paper_symmetric':{'inter-area':(.481,2.3)}}
+# Positive real eigenvalues are reported above 1e-3 s^-1: the double zero eigenvalue
+# (no infinite bus, KD = 0) splits to about +-2e-4 under finite differences.
+# Eigenvalues of [1]: Table E12.3 (manual) and Table E12.4(ii) (thyristor, KA 200, TR 0.01).
+TEXTBOOK_EIGENVALUES={'manual':{'inter-area':-.111+3.43j,'area-1':-.492+6.82j,'area-2':-.506+7.02j},
+                      'thyristor':{'inter-area':.031+3.84j,'area-1':-.490+7.15j,'area-2':-.496+7.35j}}
+
 def main():
-    data=[];summaries=[]
+    data=[];summaries=[];book=[]
     cases={'textbook':Case(kd.Y,kd.load,kd.V0,kd.H,1),
            'paper_symmetric':symmetric()}
     for name,case in cases.items():
@@ -90,21 +141,46 @@ def main():
             check=model.modes(5e-6)[0]
             difference=max(abs(values-check))
             assert difference<1e-6
+            labels=[kd.mode_label(vectors[4:8,j]) for j in range(3)]
+            expected=(['area-1','area-2','inter-area'] if name=='textbook'
+                      else ['inter-area','local-both-areas','local-both-areas'])
+            if sorted(labels)!=expected or labels[0]!='inter-area':
+                raise RuntimeError(f'Unexpected mode classification {labels} for {name}/{sat}.')
             for j,val in enumerate(values):
-                speed=vectors[4:8,j];speed/=speed[np.argmax(abs(speed))]
-                ref=[.545,1.087,1.117][j] if name=='textbook' else (.481 if j==0 else np.nan)
-                zref=[3.2,7.2,7.2][j] if name=='textbook' else (2.3 if j==0 else np.nan)
+                speed=vectors[4:8,j].copy();speed/=speed[np.argmax(abs(speed))]
+                ref,zref=REFERENCES[name].get(labels[j],(np.nan,np.nan))
                 data.append([name,sat,j+1,val.real,val.imag,val.imag/(2*np.pi),
                              -val.real/abs(val)*100,ref,zref,
                              (val.imag/(2*np.pi)/ref-1)*100,
-                             *np.angle(speed,deg=True)])
+                             *np.angle(speed,deg=True),labels[j],*abs(speed)])
+            spectrum=model.spectrum()
             summaries.append(dict(case=name,saturation=sat,
                                   equilibrium_max_residual=max(abs(model.rhs(model.x))),
-                                  jacobian_halving_max_eigenvalue_change=float(difference)))
+                                  jacobian_halving_max_eigenvalue_change=float(difference),
+                                  max_real_eigenvalue=float(spectrum.real.max()),
+                                  positive_real_eigenvalues=[float(z.real) for z in spectrum
+                                                             if z.real>1e-3],
+                                  near_zero_eigenvalues=int(sum(abs(spectrum)<1e-3))))
+            if name=='textbook' and sat in ('none','kundur_exponential'):
+                for excitation in ('manual','thyristor'):
+                    if excitation=='manual':
+                        vals,shapes=values,vectors[4:8]
+                    else:
+                        vals,shapes=static_exciter_modes(Detailed(case,sat))
+                    for j in range(3):
+                        label=kd.mode_label(shapes[:,j]);ref=TEXTBOOK_EIGENVALUES[excitation][label]
+                        val=vals[j]
+                        book.append([sat,excitation,label,val.real,val.imag/(2*np.pi),
+                                     -100*val.real/abs(val),ref.real,ref.imag/(2*np.pi),
+                                     -100*ref.real/abs(ref),(val.imag/ref.imag-1)*100])
     table('detailed_modes',['case','saturation','mode','sigma_per_s','omega_rad_s',
           'frequency_Hz','damping_pct','reference_Hz','reference_damping_pct',
-          'frequency_error_pct','G1_phase_deg','G2_phase_deg','G3_phase_deg','G4_phase_deg'],data)
+          'frequency_error_pct','G1_phase_deg','G2_phase_deg','G3_phase_deg','G4_phase_deg',
+          'mode_label','G1_amp','G2_amp','G3_amp','G4_amp'],data)
     (OUT/'detailed_checks.json').write_text(json.dumps(summaries,indent=2))
+    table('textbook_eigenvalue_comparison',['saturation','excitation','mode_label','sigma_per_s',
+          'frequency_Hz','damping_pct','ref1_sigma_per_s','ref1_frequency_Hz','ref1_damping_pct',
+          'frequency_difference_pct'],book)
     fig,ax=plt.subplots(1,2,figsize=(7.15,2.8))
     for sat,marker in zip(['none','kundur_exponential','genrou_quadratic'],['o','s','^']):
         rs=[r for r in data if r[0]=='textbook' and r[1]==sat]

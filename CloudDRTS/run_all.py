@@ -11,7 +11,9 @@ def main():
         "kundur.py", "experiments.py", "waveform.py", "extended.py",
         "grid_cuts.py", "audit_checks.py", "literature_checks.py",
         "event_validation.py", "interface_attribution.py",
-        "working_point_validation.py", "detailed_machine.py", "detailed_transient.py",
+        "working_point_validation.py", "detailed_machine.py", "textbook_reproduction.py",
+        "phase1_sensitivity.py",
+        "detailed_transient.py",
         "dynamic_thevenin.py",
     )
     for index, script in enumerate(scripts, 1):

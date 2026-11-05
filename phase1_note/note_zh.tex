@@ -1,0 +1,133 @@
+% 阶段一说明（中文）。用 phase1_note/build_phase1_note.py 生成。
+\documentclass[conference,letterpaper]{IEEEtran}
+\usepackage{mathptmx}
+\usepackage[no-math]{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage[UTF8,scheme=plain,fontset=none]{ctex}
+\setCJKmainfont{Noto Serif CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{mode=match,reset-text-series=false,reset-text-shape=false,text-series-to-math=true,retain-explicit-plus=true,exponent-product=\times,group-digits=false}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\input{values.tex}
+\hyphenation{ANDES}
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+\renewcommand{\abstractname}{摘要}
+\renewcommand{\IEEEkeywordsname}{关键词}
+\renewcommand{\refname}{参考文献}
+\linespread{1.08}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovedisplayskip}{4pt}\setlength{\belowdisplayskip}{4pt}
+
+\begin{document}
+\title{Kundur 两区系统的机电模态与故障响应}
+\author{\IEEEauthorblockN{Haoran Liu}
+\IEEEauthorblockA{CloudDRTS 准备计划\quad 阶段一成果\quad 2026 年 11 月}}
+\maketitle
+
+\begin{abstract}
+本文用 Python 搭建两区四机基准系统，机组采用六阶模型，施加三相故障并做数值线性化。区间模态频率为 \VfIA~Hz，阻尼比 \VzIA\,\%；两个本地模态为 \VfLA~Hz 和 \VfLB~Hz；独立的 ANDES 模型与之相差不超过 \Vandesdf~Hz。采用文献\cite{kundur}的机组模型和饱和处理后，其表 E12.3 的全部 24 个特征值都得到复现。对文献\cite{klein}的对称工况，区间模态为 \Vfsym~Hz，文献值为 0.481~Hz。计算文献\cite{klein}列出的全部四个工况后发现：教材网络与文献\cite{klein}的无升压变压器网络，把每个已发表的频率和阻尼比都夹在中间。
+\end{abstract}
+\begin{IEEEkeywords}
+区间振荡，模态分析，小干扰稳定，两区系统
+\end{IEEEkeywords}
+
+\section{任务与范围}
+准备计划的阶段一要求：搭建两区系统\cite{kundur,klein}，施加三相故障，求线性化模型，识别区间模态和两个本地模态，并与文献\cite{klein}比较。文中数值全部取自提交 \texttt{\Vcommit} 代码生成的结果文件。
+
+\section{模型与方法}
+\subsubsection*{网络与运行点}
+系统含 11 条母线和 4 台 900~MVA 机组，基准为 100~MVA、60~Hz。线路参数为 $r=0.0001$、$x=0.001$、$b=0.00175$~p.u./km。母线 7、9 的负荷分别为 $967+j100$ 和 $1767+j100$~MVA，并联补偿分别为 200 和 350~Mvar。机组 2--4 出力为 700、719、700~MW，机组 1 为平衡机。潮流残差为 \Vpfres~p.u.，母线 7 流向母线 8 的功率为 \Vtie~MW。
+
+\subsubsection*{机组与负荷模型}
+每台机组用六阶隐极模型（$\delta$、$\Delta\omega$、$e'_q$、$e'_d$ 及两个阻尼绕组磁链），参数取自文献\cite{kundur}。励磁为手动（$E_{fd}$ 恒定），机械转矩恒定，基本工况不计饱和；与文献\cite{kundur}比较时采用其饱和数据。有功负荷按恒电流、无功负荷按恒阻抗处理。另保留四阶（双轴）模型作为对照。
+
+\subsubsection*{线性化与模态识别}
+在平衡点用中心差分求状态矩阵 $A=\partial f/\partial x$，平衡点残差为 \Veqres。差分步长减半后，特征值最大变化为 \Vjacdiff~s$^{-1}$。取 $1<\operatorname{Im}\lambda<12$~rad/s 的模态为机电模态。记 $\hat v$ 为 G1--G4 的转速振型，并按其最大分量归一化。满足
+\begin{equation}
+\bigl|\tfrac{\hat v_1+\hat v_2}{2}-\tfrac{\hat v_3+\hat v_4}{2}\bigr|>\max\bigl(|\hat v_1-\hat v_2|,\,|\hat v_3-\hat v_4|\bigr)
+\end{equation}
+的模态判为区间模态；否则判为区内差别较大那个区域的本地模态。标签由代码计算并校验，不是按频率排序指定的。
+
+\subsubsection*{故障设置}
+在母线 8 施加三相故障（$R_f=10^{-4}$~p.u.），持续时间为 1.00--1.08~s。用 DOP853 积分（相对容差 $10^{-8}$），每个开关时刻重新起步。
+
+\section{结果}
+\subsection{机电模态}
+\begin{table}[!t]
+\caption{机电模态：$f$~(Hz)\,/\,$\zeta$~(\%)}
+\label{tab:modes}
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+模态 & 不计饱和 & 按\cite{kundur}的方法 & \cite{kundur}表 E12.3\\
+\midrule
+区间模态 & \VfIA\,/\,\VzIA & \VfrIA\,/\,\VzrIA & \VfrefIA\,/\,\VzrefIA\\
+区域 1 本地 & \VfLA\,/\,\VzLA & \VfrLA\,/\,\VzrLA & \VfrefLA\,/\,\VzrefLA\\
+区域 2 本地 & \VfLB\,/\,\VzLB & \VfrLB\,/\,\VzrLB & \VfrefLB\,/\,\VzrefLB\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_modes_zh.pdf}
+\caption{转速振型（不计饱和，按最大分量归一化）。}
+\label{fig:modes}
+\end{figure}
+表~\ref{tab:modes} 和图~\ref{fig:modes} 给出三个模态。区间模态中，G1、G2 与 G3、G4 反相摆动；每个本地模态以同一区域两台机组的反相运动为主，振型和区域归属与文献\cite{kundur}一致。
+
+文献\cite{kundur}例 12.6 计入了饱和（$A_{sat}=0.015$，$B_{sat}=9.6$，$\psi_{T1}=0.9$）。其小干扰分析采用经典参数换算的等效电路机组模型——不计饱和时与上述模型特征值一致（差别 \Vequiv~s$^{-1}$）——并在两轴上都用增量饱和系数 $1/(1+B_{sat}\psi_I)$ 线性化。按此处理（表~\ref{tab:modes} 第 3 列），文献\cite{kundur}表 E12.3 的全部 24 个特征值都得到复现。最大差别为 \Veonetwothree~s$^{-1}$，出现在区域 1 模态：书中虚部印为 6.82，而书中频率 1.087~Hz 对应 6.83~rad/s。表 E12.4 的晶闸管工况 (ii)、(iii) 差别不超过 \Vthydiff~s$^{-1}$；加 PSS 的工况 (iv) 转子模态最多相差 \Vpssdiff~s$^{-1}$，原因尚未查明。若改用 GENROU 的割线饱和，本地模态阻尼约为 8.5\,\%，这一差别完全来自饱和处理方式。
+
+参数相同的 ANDES~1.9.3\cite{andes} 与三个特征值的差别不超过 \Vandeseig~s$^{-1}$，母线电压差别不超过 \Vandesv~p.u.；沿各特征向量给出初始偏移后，非线性模型与模态预测的差别不超过偏移量的 \Vmodalerr\,\%。不计饱和时，模型有一个缓慢的实特征值 \Vposnone~s$^{-1}$（ANDES 为 \Vposandes~s$^{-1}$），即时间常数约 \Vtau~s 的非周期漂移，12~s 的仿真看不出来；按文献\cite{kundur}的方法，除两个零特征值外所有特征值都稳定，与该书一致。
+
+\subsection{故障响应}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_fault_zh.pdf}
+\caption{母线 8 故障（阴影为 1.00--1.08~s）：(a) 相对惯量中心的功角；(b) 联络线功率；(c) 惯量中心频率偏差。虚线为步长 0.5~ms 的 ANDES 结果。}
+\label{fig:fault}
+\end{figure}
+故障前最大转速偏差为 \Vprefault~Hz，说明初始状态自洽。故障期间母线 8 电压降至 \Vvmin~p.u.（图~\ref{fig:fault}）。故障后的摆动以区间模态为主并逐渐衰减。与 ANDES 相比，功角、转速和联络线功率的最大差别分别为 \Vandesang\,\si{\degree}、\Vandesfreq~Hz 和 \Vandestie~MW。
+
+模型不含调速器和阻尼项，惯量中心频率最终比额定值高 \Vcoidf~Hz 且不回落，因此图~\ref{fig:fault}(a) 的功角取相对惯量中心的值。
+
+\section{与 Klein、Rogers、Kundur 文献的比较}
+\begin{table}[!t]
+\caption{文献\cite{klein}对称零传输工况的区间模态：$f$~(Hz)\,/\,$\zeta$~(\%)}
+\label{tab:klein}
+\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+励磁，联络线回数 & \cite{klein} & \cite{kundur} 网络 & 无升压变压器\\
+\midrule
+手动，1 & \VrefM & \VtbM & \VntM\\
+快速，1 & \VrefFa & \VtbFa & \VntFa\\
+快速，2 & \VrefFb & \VtbFb & \VntFb\\
+快速，3 & \VrefFc & \VtbFc & \VntFc\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[!t]
+\centering\includegraphics[width=\columnwidth]{fig_sensitivity_zh.pdf}
+\caption{表~\ref{tab:klein} 四个工况的区间模态随升压变压器电抗的变化。点线为文献\cite{klein}的值，菱形为各曲线达到该值的位置。未做任何拟合。}
+\label{fig:sens}
+\end{figure}
+对于每区发电 1400~MW、恒阻抗负荷 1367~MW 的对称系统，文献\cite{klein}表 2 给出手动励磁、1 回联络线投运时的区间模态为 0.481~Hz，阻尼比 0.023；表 1 给出同一系统在快速静止励磁下，3、2、1 回联络线投运时的结果。这些数值和试验条件已与原文核对。文献\cite{klein}没有给出本地模态的数值，因此本地模态只与文献\cite{kundur}比较（表~\ref{tab:modes}）。
+
+在文献\cite{kundur}的网络上按上述条件计算（1 回联络线、每区补偿 200~Mvar），结果为 \Vfsym~Hz（\Vdfsym\,\%），阻尼比 \Vzsym\,\%；四阶模型为 \Vfsymtwo~Hz。不计饱和时，该工况也有一个缓慢的实特征值 \Vpossym~s$^{-1}$；计入文献\cite{kundur}的饱和后该特征值消失，区间模态频率只变化 \Vsymsat~Hz。每区并联补偿从 100 增至 350~Mvar，频率只在 \Vcomplo--\Vcomphi~Hz 之间变化。网络上还有一处差别：文献\cite{klein}图 1 把机组直接画在区域母线上，也没有给出变压器数据；而文献\cite{kundur}的网络含 0.15~p.u. 的升压变压器。
+
+因此，表~\ref{tab:klein} 用两种网络计算了原文列出的四个工况，励磁采用文献\cite{klein}附录 A 的快速励磁（$K_A=200$，$T_R=0.01$~s，无暂态增益衰减）。每个工况中，两种网络都把已发表的频率和阻尼比夹在中间。图~\ref{fig:sens} 在两者之间扫描升压电抗：三个快速励磁工况在 \Vxtfastlo--\Vxtfasthi~p.u. 处达到文献频率，手动励磁工况在 \VxtM~p.u. 处达到。这说明差距主要来自文献\cite{klein}未给出的机组接入阻抗。本文没有拟合或采用任何电抗值；要完全闭合这一比较，需要文献\cite{klein}的原始输入数据。
+
+\section{局限与后续工作}
+本模型不含 PSS 和调速器，除表~\ref{tab:klein} 外也不含 AVR。后续工作：商定以文献\cite{kundur}还是文献\cite{klein}的网络为基准；用该网络开展阶段三的 EMT 切分研究。
+
+\begin{thebibliography}{1}
+\bibitem{kundur} P.~Kundur, \emph{Power System Stability and Control}. New York, NY, USA: McGraw-Hill, 1994.
+\bibitem{klein} M.~Klein, G.~J. Rogers, and P.~Kundur, ``A fundamental study of inter-area oscillations in power systems,'' \emph{IEEE Trans. Power Syst.}, vol.~6, no.~3, pp.~914--921, Aug. 1991.
+\bibitem{andes} H.~Cui, F.~Li, and K.~Tomsovic, ``Hybrid symbolic-numeric framework for power system modeling and analysis,'' \emph{IEEE Trans. Power Syst.}, vol.~36, no.~2, pp.~1373--1384, Mar. 2021.
+\end{thebibliography}
+\end{document}
