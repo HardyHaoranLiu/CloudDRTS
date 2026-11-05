@@ -1,0 +1,20 @@
+{
+  "independent_network_rhs_max_difference": 6.38378239159465e-15,
+  "symmetric_one_tie_frequency_Hz": 0.42454045474120106,
+  "symmetric_one_tie_damping_pct": 4.859012381620299,
+  "symmetric_inter_area_phase_deg": 179.99999998748808,
+  "symmetric_generation_MW": [
+    699.2518282091875,
+    699.9999999999835,
+    699.2518282091864,
+    699.9999999999814
+  ],
+  "original_1991_manual_no_transfer_frequency_Hz": 0.481,
+  "original_1991_manual_no_transfer_damping_pct": 2.3,
+  "unmatched_parameters": [
+    "fourth-order machine instead of detailed subtransient machine",
+    "no stator resistance or saturation",
+    "assumed 200 Mvar compensation per area, not fully specified in paper",
+    "outer-unit output determined by power flow"
+  ]
+}

@@ -1,0 +1,34 @@
+Working directory: "/home/claude/CloudDRTS"
+Parsing input file "/home/claude/CloudDRTS/external_run/historical/andes-1.7.5/andes/cases/kundur/kundur_full.xlsx"...
+Input file parsed in 2.4126 seconds.
+Numerical code generation (quick mode) started...
+[K Generating code for Bus ( 1/10).[K Generating code for PQ ( 2/10).[K Generating code for PV ( 3/10).[K Generating code for Slack ( 4/10).[K Generating code for Line ( 5/10).[K Generating code for Area ( 6/10).[K Generating code for GENROU ( 7/10).[K Generating code for TGOV1 ( 8/10).[K Generating code for EXDC2 ( 9/10).[K Generating code for Toggler (10/10).Saved generated pycode to "/home/claude/CloudDRTS/external_run/historical/pycode"
+Generated numerical code for 10 models in 0.5986 seconds.
+System internal structure set up in 0.0739 seconds.
+-> System connectivity check results:
+  No islanded bus detected.
+  System is interconnected.
+  Each island has a slack bus correctly defined and enabled.
+
+-> Power flow calculation
+           Numba: Off
+   Sparse solver: KLU
+ Solution method: NR method
+Power flow initialized in 0.0030 seconds.
+0: |F(x)| = 14.9282832
+1: |F(x)| = 3.608627841
+2: |F(x)| = 0.1701107882
+3: |F(x)| = 0.002038626956
+4: |F(x)| = 3.745103977e-07
+Converged in 5 iterations in 0.0034 seconds.
+Report saved to "/home/claude/CloudDRTS/external_run/results/historical/kundur_full_out.txt" in 0.0011 seconds.
+Initialization for dynamics completed in 0.0284 seconds.
+Initialization was successful.
+
+-> Eigenvalue Analysis:
+  Positive       0
+  Zeros          1
+  Negative      52
+Eigenvalue analysis finished in 0.2506 seconds.
+Report saved to "/home/claude/CloudDRTS/external_run/results/historical/kundur_full_eig.txt".
+{'andes': '1.7.5', 'case': '/home/claude/CloudDRTS/external_run/historical/andes-1.7.5/andes/cases/kundur/kundur_full.xlsx', 'buses': 10, 'modes': [{'sigma': -0.6564035437336901, 'omega': 7.085957538810122, 'freq': 1.1277651688409118, 'damping': 9.223950232669994}, {'sigma': -0.6525234117441338, 'omega': 6.834254560711259, 'freq': 1.0877053956855267, 'damping': 9.504611628770071}, {'sigma': -0.19177101516296102, 'omega': 4.224742095937969, 'freq': 0.6723885878569421, 'damping': 4.534566767359527}]}

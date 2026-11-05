@@ -1,0 +1,9 @@
+{
+  "power_flow_max_residual": 6.52811138479592e-14,
+  "generated_MW": 2798.556656063364,
+  "active_load_MW": 2734,
+  "branch_loss_MW": 64.55665606336471,
+  "power_balance_error_MW": 1.4988010832439613e-12,
+  "discrete_phasor_error_order": 2.0000009317285294,
+  "note": "Operating point belongs to represented 390-us lossless long-line network; physical load powers retained."
+}

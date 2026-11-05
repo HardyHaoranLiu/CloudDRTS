@@ -1,0 +1,7 @@
+{
+  "max_modal_state_error_ratio": 0.004802689180793962,
+  "minimum_fault_V8_pu": 0.0016479442533427846,
+  "prefault_max_speed_deviation_Hz": 3.1124179551176356e-13,
+  "final_COI_df_Hz": 0.3720035843157337,
+  "COI_df_note": "No governor and no damping term: post-fault COI frequency does not return to 60 Hz."
+}

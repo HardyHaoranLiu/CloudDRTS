@@ -1,0 +1,38 @@
+{
+  "input_regressions_passed": 8,
+  "multiple_reflection_checks": [
+    [
+      50.0,
+      2.220446049250313e-16
+    ],
+    [
+      5.0,
+      2.220446049250313e-16
+    ]
+  ],
+  "switch_convergence": [
+    [
+      50,
+      9.297480590908513e-05
+    ],
+    [
+      25,
+      2.3220414466562644e-05
+    ],
+    [
+      10,
+      3.7145522673309728e-06
+    ],
+    [
+      5,
+      9.28605716543629e-07
+    ],
+    [
+      2.5,
+      2.3215130184883748e-07
+    ]
+  ],
+  "switch_observed_order": 2.0003546782873216,
+  "lc_max_relative_energy_error": 6.181721801112872e-13,
+  "emt_vs_phasor_max_voltage_difference_pu": 0.010044968432212031
+}

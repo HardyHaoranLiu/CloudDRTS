@@ -1,0 +1,77 @@
+{
+  "published_rounding_pass": true,
+  "waveform_metrics": [
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "COI_angle",
+      "unit": "deg",
+      "samples": 2401,
+      "max_abs": 0.0002725737971354669,
+      "rms": 0.00012185787862964529
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "speed_deviation",
+      "unit": "Hz",
+      "samples": 2401,
+      "max_abs": 5.8461537122411755e-06,
+      "rms": 1.8252839562622915e-06
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "bus8_voltage",
+      "unit": "pu",
+      "samples": 2401,
+      "max_abs": 2.6705258986403635e-06,
+      "rms": 1.1242711606430824e-06
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "tie_power",
+      "unit": "MW",
+      "samples": 2401,
+      "max_abs": 0.0034602466604951587,
+      "rms": 0.0015622892006547328
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "COI_angle",
+      "unit": "deg",
+      "samples": 2401,
+      "max_abs": 0.00019259263474857846,
+      "rms": 8.206113297048205e-05
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "speed_deviation",
+      "unit": "Hz",
+      "samples": 2401,
+      "max_abs": 6.219986987854309e-06,
+      "rms": 2.4816385118324586e-06
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "bus8_voltage",
+      "unit": "pu",
+      "samples": 2401,
+      "max_abs": 1.582922111942331e-06,
+      "rms": 8.160607278448927e-07
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "tie_power",
+      "unit": "MW",
+      "samples": 2401,
+      "max_abs": 0.0025437661757905516,
+      "rms": 0.0011703872283462897
+    }
+  ]
+}

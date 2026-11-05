@@ -1,0 +1,79 @@
+{
+  "phase1": {
+    "status": "partial_reference_alignment",
+    "practice": "fault, linearization, computed mode labels, external matched-case check, sensitivity sweep and two-page notes (zh, en) complete",
+    "notes": [
+      "output/pdf/Phase1_Note_EN.pdf",
+      "output/pdf/Phase1_Note_ZH.pdf"
+    ],
+    "unresolved": "original-paper operating point and textbook damping difference; see CloudDRTS/results/phase1_sensitivity.json"
+  },
+  "phase2": {
+    "status": "practice_checks_passed",
+    "checks": [
+      "RC/RL/RLC analytic validation",
+      "50 and 5 us plus refinements",
+      "Bergeron reflection",
+      "switch event state continuity",
+      "LC energy",
+      "eight invalid input regressions"
+    ],
+    "emt_external_software": "not performed; not required by onboarding plan"
+  },
+  "phase3": {
+    "status": "practice_checks_passed",
+    "dynamic_thevenin": {
+      "exact_discrete_equivalent_max_voltage_difference_V": 1.8474111129762605e-13,
+      "exact_discrete_equivalent_max_current_difference_A": 3.1086244689504383e-15,
+      "max_kcl_residual_A": 1.0769163338864018e-13,
+      "continuous_phasor_observed_order": 2.000422136451458,
+      "max_steady_fit_vs_independent_discrete_voltage_V": 4.334310688136611e-13,
+      "max_steady_fit_vs_independent_discrete_current_A": 5.613217783960923e-15,
+      "static_zero_delay_400Hz_voltage_error_pct": 32.9870144292139,
+      "dynamic_zero_delay_400Hz_voltage_error_pct": 6.509204248700726e-14,
+      "static_equivalent": "DC-only approximation, C omitted",
+      "dynamic_equivalent": "Zth(s)=1/(1/Rs+1/Rp+s*C); loaded capacitor state retained",
+      "delay_convention": "One-way k*dt added to both directional wave histories, in addition to physical TAU",
+      "voltage_tolerance_V": 1e-08,
+      "current_tolerance_A": 1e-08,
+      "passed": true
+    },
+    "unresolved": "dynamic multiport Kundur EMT coupling and real communications are future work"
+  },
+  "phase4": {
+    "status": "python_profiling_path_complete",
+    "performance": {
+      "5": {
+        "median_us_range": [
+          14.149,
+          14.8965
+        ],
+        "miss_pct_range": [
+          100.0,
+          100.0
+        ],
+        "max_us": 192.239,
+        "runs": 5,
+        "steps_each": 4000
+      },
+      "50": {
+        "median_us_range": [
+          13.997,
+          14.213
+        ],
+        "miss_pct_range": [
+          0.125,
+          0.15
+        ],
+        "max_us": 212.727,
+        "runs": 5,
+        "steps_each": 4000
+      }
+    },
+    "real_time_guarantee": false,
+    "hls": "alternative path not selected; not a missing mandatory step"
+  },
+  "shared_code": "Portable Git bundle provided; no remote repository has been configured or pushed.",
+  "reading_and_reviews": "Reading map supplied; no claim that the user completed all readings or mentor reviews.",
+  "external_scope": "Prior ANDES raw runs retained; external result analysis rechecked against this run local fault CSV."
+}

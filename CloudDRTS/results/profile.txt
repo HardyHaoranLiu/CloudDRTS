@@ -1,0 +1,28 @@
+         176556 function calls (176490 primitive calls) in 0.131 seconds
+
+   Ordered by: cumulative time
+   List reduced from 89 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.020    0.020    0.131    0.131 experiments.py:50(benchmark)
+     4001    0.032    0.000    0.099    0.000 emt.py:50(step)
+     4003    0.023    0.000    0.060    0.000 _linalg.py:382(solve)
+     4003    0.007    0.000    0.015    0.000 _linalg.py:207(_commonType)
+     4001    0.006    0.000    0.009    0.000 emt.py:125(publish)
+     8006    0.004    0.000    0.007    0.000 _linalg.py:182(_makearray)
+     4004    0.003    0.000    0.006    0.000 _ufunc_config.py:448(__enter__)
+    12009    0.003    0.000    0.004    0.000 _linalg.py:187(isComplexType)
+     8006    0.002    0.000    0.004    0.000 _linalg.py:201(_realType)
+     4004    0.002    0.000    0.003    0.000 _ufunc_config.py:464(__exit__)
+     4005    0.002    0.000    0.003    0.000 {built-in method builtins.sum}
+     4019    0.002    0.000    0.002    0.000 {built-in method numpy.array}
+    20015    0.002    0.000    0.002    0.000 {built-in method builtins.issubclass}
+     8004    0.002    0.000    0.002    0.000 {built-in method builtins.round}
+     8017    0.002    0.000    0.002    0.000 {method 'items' of 'dict' objects}
+     4004    0.002    0.000    0.002    0.000 {built-in method numpy._core._multiarray_umath._make_extobj}
+     4003    0.002    0.000    0.002    0.000 _linalg.py:256(_assert_stacked_square)
+     4003    0.002    0.000    0.002    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     8002    0.001    0.000    0.001    0.000 {method 'append' of 'collections.deque' objects}
+     8008    0.001    0.000    0.001    0.000 {method 'get' of 'dict' objects}
+
+

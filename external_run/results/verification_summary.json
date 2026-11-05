@@ -1,0 +1,178 @@
+{
+  "historical_release": "1.7.5",
+  "published_output_version": "1.7.5.post2.dev0+ga53a31fa (2022-07-05)",
+  "published_rounding_checks": [
+    {
+      "mode": "inter_area",
+      "quantities": [
+        "sigma",
+        "omega",
+        "frequency",
+        "damping"
+      ],
+      "within_printed_rounding": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "mode": "local_low",
+      "quantities": [
+        "sigma",
+        "omega",
+        "frequency",
+        "damping"
+      ],
+      "within_printed_rounding": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "mode": "local_high",
+      "quantities": [
+        "sigma",
+        "omega",
+        "frequency",
+        "damping"
+      ],
+      "within_printed_rounding": [
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "published_rounding_pass": true,
+  "official_xlsx_identical_across_versions": true,
+  "official_xlsx_sha256": "f725e03ba12d8207616f68acdd606bbd35e7c4a68f13e66d7db43925adac2ed8",
+  "local_fault_csv_sha256": "4b56ca0ecf4dfd92b0cfa5ae4397d34f9be51ca8c7ff3c8bf966c7ef9a335795",
+  "same_parameter_modal": {
+    "andes_version": "1.9.3",
+    "official_case_buses": 10,
+    "matched_case_buses": 11,
+    "official_case_sha256": "f725e03ba12d8207616f68acdd606bbd35e7c4a68f13e66d7db43925adac2ed8",
+    "matched_case_sha256": "69796e0972a6281d74e01a1b3b86b6d261805d3ef3c56b83364733546b1295b3",
+    "matched_frequency_max_abs_difference_Hz": 6.546234257778707e-07,
+    "matched_eigenvalue_max_abs_difference_per_s": 4.127205329687373e-06,
+    "matched_voltage_max_abs_difference_pu": 6.533109492279365e-07,
+    "numerical_line_regularization": "ANDES 1.9.3 adds 1e-8 to each branch r and x",
+    "small_eigenvalues": [
+      {
+        "real": -1.547136203135995e-06,
+        "imag": 0.0
+      },
+      {
+        "real": 1.5474487079224803e-06,
+        "imag": 0.0
+      }
+    ],
+    "max_real_eigenvalue": 0.004899062171035283,
+    "positive_real_eigenvalues": [
+      0.004899062171035283
+    ],
+    "acceptance": {
+      "freq_abs_tol_Hz": 1e-05,
+      "eigen_abs_tol_per_s": 0.0001,
+      "passed": true
+    },
+    "environment_serial_cpu_override": "psutil.cpu_count -> 1 because /proc/cpuinfo is absent; model equations unmodified"
+  },
+  "waveform_alignment": "Interpolate to all 2401 local samples; replace only exact t=1,1.08 rows by external right-limit event solves; omit no samples.",
+  "waveform_metrics": [
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "COI_angle",
+      "unit": "deg",
+      "samples": 2401,
+      "max_abs": 0.0002725737971354669,
+      "rms": 0.00012185787862964529
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "speed_deviation",
+      "unit": "Hz",
+      "samples": 2401,
+      "max_abs": 5.8461537122411755e-06,
+      "rms": 1.8252839562622915e-06
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "bus8_voltage",
+      "unit": "pu",
+      "samples": 2401,
+      "max_abs": 2.6705258986403635e-06,
+      "rms": 1.1242711606430824e-06
+    },
+    {
+      "run": "consistent",
+      "step_s": 0.001,
+      "quantity": "tie_power",
+      "unit": "MW",
+      "samples": 2401,
+      "max_abs": 0.0034602466604951587,
+      "rms": 0.0015622892006547328
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "COI_angle",
+      "unit": "deg",
+      "samples": 2401,
+      "max_abs": 0.00019259263474857846,
+      "rms": 8.206113297048205e-05
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "speed_deviation",
+      "unit": "Hz",
+      "samples": 2401,
+      "max_abs": 6.219986987854309e-06,
+      "rms": 2.4816385118324586e-06
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "bus8_voltage",
+      "unit": "pu",
+      "samples": 2401,
+      "max_abs": 1.582922111942331e-06,
+      "rms": 8.160607278448927e-07
+    },
+    {
+      "run": "fine",
+      "step_s": 0.0005,
+      "quantity": "tie_power",
+      "unit": "MW",
+      "samples": 2401,
+      "max_abs": 0.0025437661757905516,
+      "rms": 0.0011703872283462897
+    }
+  ],
+  "default_andes_fault_failure": {
+    "andes": "1.9.3",
+    "steps": 4105,
+    "end_time": 4.097049999999712,
+    "busted": true,
+    "method": "trapezoid",
+    "requested_step": 0.001,
+    "tolerance": 1e-09
+  },
+  "event_adapter": "Cartesian current-balance event initialization, fixed differential states, checked against full ANDES g; fixed-field unsaturated GENROU active-I/reactive-Z profile only.",
+  "claim_limits": [
+    "Only experiment 1 phasor calculations receive this independent ANDES check.",
+    "This is not the original 1991 paper configuration.",
+    "The default ANDES deep-fault run failed; only the disclosed event-adapter runs completed.",
+    "A factor-four time-domain error reduction is not established; version/model regularization remains.",
+    "STEPSS published values are supplementary references and were not executed locally."
+  ]
+}

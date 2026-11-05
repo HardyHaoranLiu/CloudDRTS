@@ -1,0 +1,16 @@
+{
+  "exact_discrete_equivalent_max_voltage_difference_V": 1.8474111129762605e-13,
+  "exact_discrete_equivalent_max_current_difference_A": 3.1086244689504383e-15,
+  "max_kcl_residual_A": 1.0769163338864018e-13,
+  "continuous_phasor_observed_order": 2.000422136451458,
+  "max_steady_fit_vs_independent_discrete_voltage_V": 4.334310688136611e-13,
+  "max_steady_fit_vs_independent_discrete_current_A": 5.613217783960923e-15,
+  "static_zero_delay_400Hz_voltage_error_pct": 32.9870144292139,
+  "dynamic_zero_delay_400Hz_voltage_error_pct": 6.509204248700726e-14,
+  "static_equivalent": "DC-only approximation, C omitted",
+  "dynamic_equivalent": "Zth(s)=1/(1/Rs+1/Rp+s*C); loaded capacitor state retained",
+  "delay_convention": "One-way k*dt added to both directional wave histories, in addition to physical TAU",
+  "voltage_tolerance_V": 1e-08,
+  "current_tolerance_A": 1e-08,
+  "passed": true
+}

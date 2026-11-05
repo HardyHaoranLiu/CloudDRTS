@@ -1,0 +1,31 @@
+{
+  "andes_version": "1.9.3",
+  "official_case_buses": 10,
+  "matched_case_buses": 11,
+  "official_case_sha256": "f725e03ba12d8207616f68acdd606bbd35e7c4a68f13e66d7db43925adac2ed8",
+  "matched_case_sha256": "69796e0972a6281d74e01a1b3b86b6d261805d3ef3c56b83364733546b1295b3",
+  "matched_frequency_max_abs_difference_Hz": 6.546234257778707e-07,
+  "matched_eigenvalue_max_abs_difference_per_s": 4.127205329687373e-06,
+  "matched_voltage_max_abs_difference_pu": 6.533109492279365e-07,
+  "numerical_line_regularization": "ANDES 1.9.3 adds 1e-8 to each branch r and x",
+  "small_eigenvalues": [
+    {
+      "real": -1.547136203135995e-06,
+      "imag": 0.0
+    },
+    {
+      "real": 1.5474487079224803e-06,
+      "imag": 0.0
+    }
+  ],
+  "max_real_eigenvalue": 0.004899062171035283,
+  "positive_real_eigenvalues": [
+    0.004899062171035283
+  ],
+  "acceptance": {
+    "freq_abs_tol_Hz": 1e-05,
+    "eigen_abs_tol_per_s": 0.0001,
+    "passed": true
+  },
+  "environment_serial_cpu_override": "psutil.cpu_count -> 1 because /proc/cpuinfo is absent; model equations unmodified"
+}

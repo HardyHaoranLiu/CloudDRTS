@@ -1,0 +1,74 @@
+{
+  "source": "Klein, Rogers, Kundur 1991, Tables 1 and 2; values checked against the paper.",
+  "cases": [
+    {
+      "exciter": "manual",
+      "tie_circuits": 1,
+      "ref2_Hz": 0.481,
+      "ref2_damping_pct": 2.3,
+      "textbook_network_Hz": 0.425546448376186,
+      "textbook_network_damping_pct": 4.47480679551485,
+      "no_transformer_Hz": 0.4985448029905112,
+      "no_transformer_damping_pct": 1.906739653760714,
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "frequency_crossing_transformer_x_pu": 0.04006654823722976
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 1,
+      "ref2_Hz": 0.513,
+      "ref2_damping_pct": 0.2,
+      "textbook_network_Hz": 0.486908396153339,
+      "textbook_network_damping_pct": -0.7845989960480049,
+      "no_transformer_Hz": 0.533705353657275,
+      "no_transformer_damping_pct": 0.7133904546994494,
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "frequency_crossing_transformer_x_pu": 0.07497091762841152
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 2,
+      "ref2_Hz": 0.661,
+      "ref2_damping_pct": 1.1,
+      "textbook_network_Hz": 0.6283099224735899,
+      "textbook_network_damping_pct": -0.32145406897826884,
+      "no_transformer_Hz": 0.6866242902432108,
+      "no_transformer_damping_pct": 1.6304284361226713,
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "frequency_crossing_transformer_x_pu": 0.07298992695050771
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 3,
+      "ref2_Hz": 0.748,
+      "ref2_damping_pct": 1.8,
+      "textbook_network_Hz": 0.7104809440995263,
+      "textbook_network_damping_pct": 0.06992991782708245,
+      "no_transformer_Hz": 0.775837406397354,
+      "no_transformer_damping_pct": 2.165206075431046,
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "frequency_crossing_transformer_x_pu": 0.06974170802866467
+    }
+  ],
+  "all_frequencies_bracketed": true,
+  "all_dampings_bracketed": true,
+  "frequency_crossing_range_transformer_x_pu": [
+    0.04006654823722976,
+    0.07497091762841152
+  ],
+  "v7_case": {
+    "six_state_Hz": 0.425546448376186,
+    "six_state_damping_pct": 4.47480679551485,
+    "two_axis_Hz": 0.42454045474120106
+  },
+  "compensation_range_Hz": [
+    0.41475247718210034,
+    0.4405242786674674
+  ],
+  "machine_model_effect_at_v7_case_Hz": 0.0010059936349849363,
+  "note": "Sweep only; no parameter is fitted or adopted."
+}

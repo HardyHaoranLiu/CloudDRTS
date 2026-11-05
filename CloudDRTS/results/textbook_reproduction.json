@@ -1,0 +1,38 @@
+{
+  "genrou_vs_circuit_no_saturation_max_eigenvalue_difference": 0.001023505295719219,
+  "table_E123_max_abs_difference": 0.01186593909993488,
+  "table_E123_entries": 17,
+  "table_E123_near_zero_pair": [
+    [
+      4.011243552075078e-07,
+      0.00033357317686583235
+    ],
+    [
+      4.011243552075078e-07,
+      -0.00033357317686583235
+    ]
+  ],
+  "table_E124_max_abs_difference": {
+    "thyristor": 0.004260685928212824,
+    "tgr": 0.004169280520657413,
+    "pss": 0.09701377346978622
+  },
+  "manual_modes": {
+    "inter-area": {
+      "sigma": -0.11085332503780765,
+      "frequency_Hz": 0.5454411725221819,
+      "damping_pct": 3.232911853361848
+    },
+    "area-1": {
+      "sigma": -0.4916995392184538,
+      "frequency_Hz": 1.0873246292222933,
+      "damping_pct": 7.178584379100505
+    },
+    "area-2": {
+      "sigma": -0.5059812450238976,
+      "frequency_Hz": 1.1174513382480291,
+      "damping_pct": 7.187884941238387
+    }
+  },
+  "not_modelled": "Table E12.4 case (i), self-excited dc exciter."
+}

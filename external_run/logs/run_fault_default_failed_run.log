@@ -1,0 +1,36 @@
+Numerical code generation (quick mode) started...
+[K Generating code for Bus (1/8).[K Generating code for PQ (2/8).[K Generating code for PV (3/8).[K Generating code for Slack (4/8).[K Generating code for Line (5/8).[K Generating code for Shunt (6/8).[K Generating code for GENROU (7/8).[K Generating code for Fault (8/8).Saved generated pycode to "/home/claude/CloudDRTS/external_run/pycode"
+Generated numerical code for 8 models in 0.4172 seconds.
+System internal structure set up in 0.2130 seconds.
+JSON file written to "/home/claude/CloudDRTS/external_run/case/matched_fault.json"
+-> System connectivity check results:
+  No islanded bus detected.
+  System is interconnected.
+  Each island has a slack bus correctly defined and enabled.
+
+-> Power flow calculation
+           Numba: Off
+   Sparse solver: KLU
+ Solution method: NR method
+Power flow initialized in 0.0032 seconds.
+0: |F(x)| = 17.67
+1: |F(x)| = 2.258536085
+2: |F(x)| = 0.1218352804
+3: |F(x)| = 0.005171758292
+4: |F(x)| = 5.447804334e-06
+5: |F(x)| = 5.948130877e-12
+Converged in 6 iterations in 0.0035 seconds.
+Initialization for dynamics completed in 0.0219 seconds.
+Initialization was successful.
+  0%|                                                    | 0/100 [00:00<?, ?%/s]  2%|8                                         | 2.0/100 [00:00<00:05, 18.45%/s]  4%|#6                                        | 4.0/100 [00:00<00:05, 18.20%/s]  6%|##5                                       | 6.0/100 [00:00<00:05, 18.13%/s]  8%|###3                                      | 8.0/100 [00:00<00:05, 17.01%/s]                                                                                <Fault F8>: Applying fault on Bus (idx=8) at t=1.0 sec.
+  8%|###3                                      | 8.0/100 [00:00<00:05, 17.01%/s]                                                                                <Fault F8>: Clearing fault on Bus (idx=8) at t=1.08 sec.
+  9%|###7                                      | 9.0/100 [00:00<00:05, 17.01%/s] 10%|####1                                    | 10.0/100 [00:01<00:12,  6.97%/s] 12%|####9                                    | 12.0/100 [00:01<00:14,  6.04%/s] 13%|#####3                                   | 13.0/100 [00:01<00:15,  5.74%/s] 14%|#####7                                   | 14.0/100 [00:01<00:15,  5.51%/s] 15%|######1                                  | 15.0/100 [00:02<00:16,  5.30%/s] 16%|######5                                  | 16.0/100 [00:02<00:16,  5.21%/s] 17%|######9                                  | 17.0/100 [00:02<00:16,  5.10%/s] 18%|#######3                                 | 18.0/100 [00:02<00:16,  5.04%/s] 19%|#######7                                 | 19.0/100 [00:02<00:16,  4.98%/s] 20%|########2                                | 20.0/100 [00:03<00:16,  4.94%/s] 21%|########6                                | 21.0/100 [00:03<00:16,  4.91%/s] 22%|#########                                | 22.0/100 [00:03<00:16,  4.87%/s] 23%|#########4                               | 23.0/100 [00:03<00:15,  4.85%/s] 24%|#########8                               | 24.0/100 [00:03<00:15,  4.83%/s] 25%|##########2                              | 25.0/100 [00:04<00:15,  4.80%/s] 26%|##########6                              | 26.0/100 [00:04<00:15,  4.75%/s] 27%|###########                              | 27.0/100 [00:04<00:15,  4.75%/s] 28%|###########4                             | 28.0/100 [00:04<00:15,  4.72%/s] 29%|###########8                             | 29.0/100 [00:05<00:15,  4.71%/s] 30%|############2                            | 30.0/100 [00:05<00:14,  4.74%/s] 31%|############7                            | 31.0/100 [00:05<00:14,  4.66%/s] 32%|#############1                           | 32.0/100 [00:05<00:15,  4.36%/s] 33%|#############5                           | 33.0/100 [00:05<00:15,  4.45%/s] 34%|#############9                           | 34.0/100 [00:06<00:14,  4.49%/s]Violated stability criteria. To turn off, set [TDS].criteria = 0.
+Simulation terminated at t=4.0980 s.
+ 34%|#############9                           | 34.0/100 [00:06<00:11,  5.50%/s]
+Simulation to t=12.00 sec completed in 6.1802 seconds.
+FAULT FINISHED 4105 4.097049999999712 4.6871840340098803e-17 False
+Traceback (most recent call last):
+  File "/home/claude/CloudDRTS/external_run/run_fault_default_failed.py", line 32, in <module>
+    assert success,ss.TDS.err_msg
+           ^^^^^^^
+AssertionError: Violated stability criteria. To turn off, set [TDS].criteria = 0.

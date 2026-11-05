@@ -1,0 +1,25 @@
+{
+  "andes": "1.7.5",
+  "case": "/home/claude/CloudDRTS/external_run/historical/andes-1.7.5/andes/cases/kundur/kundur_full.xlsx",
+  "buses": 10,
+  "modes": [
+    {
+      "sigma": -0.6564035437336901,
+      "omega": 7.085957538810122,
+      "freq": 1.1277651688409118,
+      "damping": 9.223950232669994
+    },
+    {
+      "sigma": -0.6525234117441338,
+      "omega": 6.834254560711259,
+      "freq": 1.0877053956855267,
+      "damping": 9.504611628770071
+    },
+    {
+      "sigma": -0.19177101516296102,
+      "omega": 4.224742095937969,
+      "freq": 0.6723885878569421,
+      "damping": 4.534566767359527
+    }
+  ]
+}
