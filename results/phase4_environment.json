@@ -1,0 +1,12 @@
+{
+  "python": "3.12.3",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "machine": "x86_64",
+  "max_waveform_difference": {
+    "generic": 0.0,
+    "cached": 1.0658141036401503e-13,
+    "scalar": 1.3500311979441904e-13,
+    "compiled": 1.3500311979441904e-13
+  }
+}

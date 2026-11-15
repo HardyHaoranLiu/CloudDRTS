@@ -1,0 +1,5 @@
+implementation,median_us,p99_us,max_us,over_5us_pct,over_50us_pct
+generic,13.26,20.927320000000066,1582.283,100.0,0.06
+cached,6.897,10.063010000000002,152.889,100.0,0.024
+scalar,0.278,0.35801000000000205,29.223,0.02,0.0
+compiled (mean only),0.011512099999999999,nan,nan,nan,nan
