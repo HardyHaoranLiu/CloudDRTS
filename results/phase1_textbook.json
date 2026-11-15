@@ -1,0 +1,15 @@
+{
+  "six_state_vs_equivalent_circuit_max_eigenvalue_difference": 0.0002660078229011715,
+  "table_E123_max_abs_difference": 0.011865939340464007,
+  "table_E123_entries": 17,
+  "table_E124_max_abs_difference": {
+    "thyristor": 0.004260685578678206,
+    "tgr": 0.004169280613815768,
+    "pss": 0.09701377166506805
+  },
+  "thyristor_inter_area_eigenvalue": [
+    0.030095284335147243,
+    3.8396464481959294
+  ],
+  "max_real_eigenvalue_book_method": -0.09935827729730665
+}

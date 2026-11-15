@@ -1,0 +1,13 @@
+{
+  "power_flow_residual_pu": 2.487232642067738e-12,
+  "tie_flow_7_to_8_MW": 400.43072413680204,
+  "equilibrium_residual": 1.709743457922741e-12,
+  "jacobian_step_halving_max_change": 7.649172161376858e-10,
+  "positive_real_eigenvalues": [
+    0.0049293990713179915
+  ],
+  "modal_check_max_error_ratio": 0.004802690761751549,
+  "prefault_max_speed_deviation_Hz": 3.1582675519018824e-13,
+  "min_bus8_voltage_during_fault_pu": 0.0016479442533427857,
+  "final_COI_frequency_deviation_Hz": 0.37200358431578595
+}

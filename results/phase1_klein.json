@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "exciter": "manual",
+      "tie_circuits": 1,
+      "paper_Hz": 0.481,
+      "paper_damping_pct": 2.3,
+      "textbook_network": [
+        0.4255464484263389,
+        4.474806793974495
+      ],
+      "no_transformer": [
+        0.4985448162748236,
+        1.906738253973798
+      ],
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "transformer_x_at_paper_frequency": 0.04006654832134531
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 1,
+      "paper_Hz": 0.513,
+      "paper_damping_pct": 0.2,
+      "textbook_network": [
+        0.48690839606531927,
+        -0.7845989805424864
+      ],
+      "no_transformer": [
+        0.5337050784611305,
+        0.7134288924698587
+      ],
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "transformer_x_at_paper_frequency": 0.07497092023132167
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 2,
+      "paper_Hz": 0.661,
+      "paper_damping_pct": 1.1,
+      "textbook_network": [
+        0.6283099224259531,
+        -0.3214541013385333
+      ],
+      "no_transformer": [
+        0.6866242710888223,
+        1.630441345742744
+      ],
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "transformer_x_at_paper_frequency": 0.07298992496748119
+    },
+    {
+      "exciter": "fast",
+      "tie_circuits": 3,
+      "paper_Hz": 0.748,
+      "paper_damping_pct": 1.8,
+      "textbook_network": [
+        0.7104809440659854,
+        0.06992989024809014
+      ],
+      "no_transformer": [
+        0.7758375243983678,
+        2.165206521335361
+      ],
+      "frequency_bracketed": true,
+      "damping_bracketed": true,
+      "transformer_x_at_paper_frequency": 0.06974170811616556
+    }
+  ],
+  "shunt_sweep_range_Hz": [
+    0.4147524772157305,
+    0.4405242785759123
+  ]
+}
