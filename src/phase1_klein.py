@@ -65,8 +65,8 @@ def main():
                               "paper_Hz", "paper_damping_pct"], rows)
     save_json("phase1_klein", dict(cases=cases, shunt_sweep_range_Hz=[min(shunt), max(shunt)]))
 
-    fig, ax = plt.subplots(figsize=(4.6, 2.9))
-    names = ["Manual, 1 tie", "Static exciter, 1 tie", "Static exciter, 2 ties", "Static exciter, 3 ties"]
+    fig, ax = plt.subplots(figsize=(3.45, 1.95))
+    names = ["Manual, 1 tie", "Static, 1 tie", "Static, 2 ties", "Static, 3 ties"]
     for k, (c, name) in enumerate(zip(cases, names)):
         r = [x for x in rows if x[0] == "transformer" and x[1] == c["exciter"] and x[2] == c["tie_circuits"]]
         ax.plot([x[3] for x in r], [x[5] for x in r], "o-", color=f"C{k}", mfc="white", ms=3.5, label=name)
@@ -75,9 +75,10 @@ def main():
             ax.plot(c["transformer_x_at_paper_frequency"], c["paper_Hz"], "D", color=f"C{k}", ms=4)
     ax.axvline(0.15, color="0.5", lw=0.7, ls="--")
     ax.text(0.148, 0.795, "textbook network", ha="right", va="top", fontsize=6.5, color="0.35")
-    ax.set(xlabel="Step-up transformer reactance (p.u., 900 MVA base)",
+    ax.set(xlabel="Step-up transformer reactance (p.u., 900 MVA)",
            ylabel="Inter-area mode (Hz)", xlim=(-0.005, 0.16), ylim=(0.39, 0.80))
-    ax.legend(loc="center right", bbox_to_anchor=(1.0, 0.465), fontsize=6.5)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, fontsize=6, handlelength=1.5,
+              columnspacing=0.9)
     save_figure(fig, "phase1_klein")
     for c in cases:
         print(c)

@@ -172,36 +172,38 @@ def main():
                                      max_state_jump_at_switching=max(jumps)))
     print(orders, max(line_err), energy, max(jumps))
 
-    fig, axes = plt.subplots(1, 4, figsize=(9.2, 2.3))
-    for ax, (name, fn, ylabel) in zip(axes[:3], [("RC", rc, "Capacitor voltage (V)"),
-                                                  ("RL", rl, "Inductor current (A)"),
-                                                  ("line", line, "Receiving-end voltage (V)")]):
+    fig, axes = plt.subplots(2, 2, figsize=(3.45, 3.2))
+    axes = axes.ravel()
+    for ax, (name, fn, ylabel) in zip(axes[:3], [("RC", rc, "RC: $v_C$ (V)"),
+                                                  ("RL", rl, "RL: $i_L$ (A)"),
+                                                  ("line", line, "Line: $v_2$ (V)")]):
         for us, ls in [(50, "-"), (5, "--")]:
             t, y, exact = fn(us * 1e-6)
             ax.plot(t * 1e3, y, ls, label=f"{us} µs")
         stride = max(1, len(t) // 60)
         ax.plot(t[::stride] * 1e3, exact[::stride], ".", color="k", ms=2.5, label="exact")
-        ax.set(xlabel="Time (ms)", ylabel=ylabel, title=name if name != "line" else "Line, reflections")
+        ax.set(xlabel="Time (ms)", ylabel=ylabel)
     t, y, exact, _ = switched(5e-6)
     t50, y50, _, _ = switched(50e-6)
     axes[3].plot(t50 * 1e3, y50[:, 1], label="50 µs")
     axes[3].plot(t * 1e3, y[:, 1], "--", label="5 µs")
     axes[3].plot(t[::30] * 1e3, exact[::30, 1], ".", color="k", ms=2.5, label="exact")
     axes[3].axvspan(2, 5, color="0.9", lw=0)
-    axes[3].set(xlabel="Time (ms)", ylabel="Capacitor voltage (V)", title="RLC, switched shunt")
-    axes[0].legend()
+    axes[3].set(xlabel="Time (ms)", ylabel="Switched RLC: $v_C$ (V)")
+    axes[0].legend(fontsize=6, handlelength=1.5)
     panel_labels(axes)
     fig.tight_layout()
     save_figure(fig, "phase2_waveforms")
 
-    fig, ax = plt.subplots(figsize=(3.6, 2.7))
+    fig, ax = plt.subplots(figsize=(3.45, 2.4))
     for (name, label), marker in zip([("RC", "RC step"), ("RL", "RL step"), ("RLC", "RLC step"),
                                       ("switched", "RLC, switched")], "osv^"):
         ax.loglog(STEPS_US, errs[name], marker + "-", label=f"{label} ({orders[name]:.2f})")
     ref = np.array(STEPS_US, float)
     ax.loglog(ref, errs["RLC"][-1] * (ref / ref[-1]) ** 2, ":", color="0.4", label="slope 2")
-    ax.set(xlabel="Time step (µs)", ylabel="Maximum error", title="Convergence (observed order)")
-    ax.legend(fontsize=6.3)
+    ax.set(xlabel="Time step (µs)", ylabel="Maximum error")
+    ax.set_ylim(top=2.0)
+    ax.legend(fontsize=6, loc="upper left")
     save_figure(fig, "phase2_convergence")
 
 

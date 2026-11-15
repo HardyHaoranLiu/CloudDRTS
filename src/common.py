@@ -12,14 +12,18 @@ RESULTS = Path(__file__).resolve().parents[1] / "results"
 RESULTS.mkdir(exist_ok=True)
 
 plt.rcParams.update({
-    "font.family": "sans-serif",
-    "font.sans-serif": ["DejaVu Sans"],
+    "font.family": "serif",
+    "font.serif": ["STIXGeneral", "DejaVu Serif"],
+    "mathtext.fontset": "stix",
+    "pdf.fonttype": 42,
     "font.size": 8,
-    "axes.titlesize": 8.5,
+    "axes.titlesize": 8,
     "axes.labelsize": 8,
-    "legend.fontsize": 7,
+    "legend.fontsize": 6.5,
     "xtick.labelsize": 7,
     "ytick.labelsize": 7,
+    "xtick.direction": "in",
+    "ytick.direction": "in",
     "axes.linewidth": 0.6,
     "lines.linewidth": 1.1,
     "lines.markersize": 4,
@@ -48,11 +52,12 @@ def save_json(name, data):
 def panel_labels(axes):
     for k, ax in enumerate(axes):
         ax.text(-0.02, 1.03, f"({chr(97 + k)})", transform=ax.transAxes,
-                ha="right", va="bottom", fontsize=8.5)
+                ha="right", va="bottom", fontsize=8)
 
 
 def save_figure(fig, name):
-    fig.savefig(RESULTS / f"{name}.png", dpi=200, bbox_inches="tight")
+    fig.savefig(RESULTS / f"{name}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(RESULTS / f"{name}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
 

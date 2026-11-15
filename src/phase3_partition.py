@@ -280,7 +280,7 @@ def main():
     vb_ref = runs[(f, "reference", 0)][0]
     show = [("split", 20, "Full split, +100 µs"), ("static", 0, "Resistive Thevenin"),
             ("phasor", 0, "Phasor Thevenin")]
-    fig, axes = plt.subplots(3, 1, figsize=(6.6, 5.6))
+    fig, axes = plt.subplots(3, 1, figsize=(7.0, 3.3))
     axes[0].plot(t * 1e3, vb_ref, color="k", lw=1.6, label="Reference (unsplit)")
     for (v, k, label), c in zip(show, ["C0", "C1", "C2"]):
         axes[0].plot(t * 1e3, runs[(f, v, k)][0], color=c, lw=0.9, label=label)
@@ -304,33 +304,31 @@ def main():
     save_figure(fig, "phase3_waveforms")
 
     # Error against added delay at 60 Hz.
-    fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.6))
+    fig, axes = plt.subplots(2, 1, figsize=(3.45, 3.1), sharex=True)
     for variant, marker in zip(VARIANTS, "osd"):
         ss = [r[7] for r in steady_rows if r[0] == f and r[1] == variant]
         post = [r[5] for r in rows if r[0] == f and r[1] == variant and r[4] == "post"]
         axes[0].plot([k * 5 for k in DELAYS], ss, marker + "-", label=NAMES[variant])
         axes[1].plot([k * 5 for k in DELAYS], post, marker + "-", label=NAMES[variant])
-    axes[0].set(xlabel="Added one-way delay (µs)", ylabel="Steady-state $v_B$ error (%)",
-                title="Before the switching event")
-    axes[1].set(xlabel="Added one-way delay (µs)", ylabel="RMS $v_B$ error (%)",
-                title="From the switching event on")
-    axes[0].legend(fontsize=6.5)
+    axes[0].set(ylabel="Steady-state error (%)")
+    axes[1].set(xlabel="Added one-way delay (µs)", ylabel="Transient RMS error (%)")
+    axes[0].legend(fontsize=6)
     panel_labels(axes)
     fig.tight_layout()
     save_figure(fig, "phase3_error_vs_delay")
 
     # Steady-state error against delay for three source frequencies.
     d = np.linspace(0, 400e-6, 161)
-    fig, ax = plt.subplots(figsize=(4.4, 2.9))
+    fig, ax = plt.subplots(figsize=(3.45, 2.6))
     for f, c in zip(FREQS, ["C0", "C1", "C2"]):
-        ax.plot(d * 1e6, steady_error("split", f, d), color=c, label=f"{f:g} Hz, full split")
+        ax.plot(d * 1e6, steady_error("split", f, d), color=c, label=f"{f:g} Hz, split")
         ax.plot(d * 1e6, steady_error("static", f, d), color=c, ls="--", lw=0.9,
-                label=f"{f:g} Hz, resistive Thevenin")
+                label=f"{f:g} Hz, resistive Th.")
         sim = [r[7] for r in steady_rows if r[0] == f and r[1] == "split"]
         ax.plot([k * 5 for k in DELAYS], sim, "o", color=c, ms=3.5, mfc="white")
-    ax.plot([], [], "o", color="0.3", ms=3.5, mfc="white", label="simulation, full split")
+    ax.plot([], [], "o", color="0.3", ms=3.5, mfc="white", label="simulation")
     ax.set(xlabel="Added one-way delay (µs)", ylabel="Steady-state $v_B$ error (%)")
-    ax.legend(fontsize=6, ncol=1, loc="upper left")
+    ax.legend(fontsize=5.8, ncol=1, loc="upper left", handlelength=1.8)
     save_figure(fig, "phase3_frequency")
 
 

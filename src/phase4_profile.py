@@ -180,7 +180,7 @@ def main():
                                          scipy=scipy.__version__, machine=platform.machine(),
                                          max_waveform_difference=check))
 
-    fig, ax = plt.subplots(figsize=(4.4, 2.8))
+    fig, ax = plt.subplots(figsize=(3.45, 2.4))
     for name, c in zip(samples, ["C0", "C1", "C2"]):
         x = np.sort(samples[name])
         share = 1 - np.arange(len(x)) / len(x)      # share of steps taking at least x
@@ -192,7 +192,7 @@ def main():
         ax.text(b * 1.08, 2e-5, f"{b} µs", fontsize=6.5)
     ax.set(xlabel="Time per step (µs)", ylabel="Share of steps taking longer",
            ylim=(1e-5, 1.5))
-    ax.legend(loc="lower left", fontsize=6.5)
+    ax.legend(loc="lower left", fontsize=6)
     save_figure(fig, "phase4_timing")
     for r in rows:
         print(r)

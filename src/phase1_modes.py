@@ -59,7 +59,7 @@ def fault_run(model):
 
 
 def mode_shape_figure(rows):
-    fig, axes = plt.subplots(1, 3, figsize=(6.3, 2.3), subplot_kw=dict(projection="polar"))
+    fig, axes = plt.subplots(1, 3, figsize=(3.45, 1.6), subplot_kw=dict(projection="polar"))
     titles = {"inter-area": "Inter-area", "area-1": "Local, area 1", "area-2": "Local, area 2"}
     for ax, r in zip(axes, rows):
         for g in range(4):
@@ -70,31 +70,35 @@ def mode_shape_figure(rows):
         ax.set_yticks([0.5, 1])
         ax.set_yticklabels([])
         ax.set_xticks(np.deg2rad([0, 90, 180, 270]))
-        ax.set_xticklabels(["0°", "90°", "180°", "270°"], fontsize=6.5)
+        ax.set_xticklabels(["0°", "", "180°", ""], fontsize=6.5)
+        ax.tick_params(pad=-1)
         ax.grid(lw=0.3)
-        ax.set_title(f"{titles[r['mode']]}, {r['frequency_Hz']:.3f} Hz", pad=10)
+        ax.set_title(f"{titles[r['mode']]}\n{r['frequency_Hz']:.3f} Hz", pad=6, fontsize=7.5)
     handles = [plt.Line2D([], [], color=f"C{g}", lw=1.5) for g in range(4)]
-    fig.legend(handles, ["G1", "G2", "G3", "G4"], ncol=4, loc="lower center", bbox_to_anchor=(0.5, -0.04))
-    fig.subplots_adjust(wspace=0.55, bottom=0.18)
+    fig.legend(handles, ["G1", "G2", "G3", "G4"], ncol=4, loc="lower center", bbox_to_anchor=(0.5, -0.06),
+               handlelength=1.4, columnspacing=1.2)
+    fig.subplots_adjust(wspace=0.45, bottom=0.12, top=0.72, left=0.04, right=0.96)
     save_figure(fig, "phase1_mode_shapes")
 
 
 def fault_figure(t, angle, tie, coi_df):
-    fig, axes = plt.subplots(3, 1, figsize=(6.3, 4.6), sharex=True)
+    fig, axes = plt.subplots(3, 1, figsize=(3.45, 2.5), sharex=True)
     for g in range(4):
         axes[0].plot(t, angle[:, g], label=f"G{g+1}")
-    axes[0].legend(ncol=4, loc="upper right")
+    axes[0].legend(ncol=4, loc="lower right", bbox_to_anchor=(1.0, 0.98), handlelength=1.2,
+                   columnspacing=0.8, fontsize=6, borderaxespad=0.1)
     axes[1].plot(t, tie, color="k")
     axes[2].plot(t, coi_df, color="k")
-    labels = ["Rotor angle change\nvs. COI (deg)", "Tie power 7→8\n(MW)", "COI frequency\ndeviation (Hz)"]
+    labels = ["$\\delta - \\delta_\\mathrm{COI}$ (deg)", "$P_{7\\to 8}$ (MW)", "$\\Delta f_\\mathrm{COI}$ (Hz)"]
     for ax, label in zip(axes, labels):
         ax.axvspan(FAULT_ON, FAULT_OFF, color="0.85", lw=0)
         ax.set_ylabel(label)
-        ax.yaxis.set_label_coords(-0.08, 0.5)
+        ax.yaxis.set_label_coords(-0.11, 0.5)
     axes[2].set_xlabel("Time (s)")
     axes[2].set_xlim(0, T_END)
     panel_labels(axes)
     fig.align_ylabels(axes)
+    fig.subplots_adjust(hspace=0.32)
     save_figure(fig, "phase1_fault")
 
 
