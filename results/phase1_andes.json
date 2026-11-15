@@ -1,0 +1,14 @@
+{
+  "andes_version": "2.0.0",
+  "max_frequency_difference_Hz": 6.086321048093257e-06,
+  "max_damping_difference_points": 0.0002373643479878229,
+  "andes_vs_klein_frequency_pct": [
+    3.6463056036955432,
+    4.035212904603047,
+    3.8762786055281495,
+    3.721393143376295
+  ],
+  "textbook_positive_real_eigenvalues": [
+    0.00489906260854917
+  ]
+}

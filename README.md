@@ -24,6 +24,17 @@ cd src
 
 `run_all.py` runs all scripts in about a minute and rewrites `results/`; each script can also be run on its own from `src/`. numba is only used for one timing in Phase 4, which is skipped if it is not installed. On Windows use `.venv\Scripts\python`.
 
+## Independent check with ANDES (optional)
+
+`src/phase1_andes.py` builds the same systems in [ANDES](https://github.com/CURENT/andes) and compares its eigenvalue results with those of Phase 1. ANDES needs its own environment:
+
+```bash
+python -m venv .venv-andes
+.venv-andes/bin/pip install -r requirements-andes.txt
+cd src
+../.venv-andes/bin/python phase1_andes.py      # after phase1_modes.py and phase1_klein.py
+```
+
 ## Building the notes
 
 The notes use the IEEEtran class and siunitx (both in TeX Live and on Overleaf) and take their figures from `results/`:
