@@ -1,0 +1,12 @@
+{
+  "observed_order": {
+    "RC": 2.000311593061585,
+    "RL": 2.000311593204043,
+    "RLC": 1.9964023505616275,
+    "switched": 1.999388900975399,
+    "switched_without_resolve": 1.0035290640709438
+  },
+  "line_max_error_V": 2.220446049250313e-16,
+  "lc_max_relative_energy_change": 6.181721801112872e-13,
+  "max_state_jump_at_switching": 0.0
+}
