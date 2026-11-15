@@ -12,11 +12,11 @@
 \begin{document}
 \title{Per-Step Cost of a Python EMT Solver\\and Requirements for Real-Time Execution}
 \author{\IEEEauthorblockN{Haoran Liu}
-\IEEEauthorblockA{CloudDRTS preparation, Phase 4\quad November 2026}}
+\IEEEauthorblockA{CloudDRTS preparation, Phase 4}}
 \maketitle
 
 \begin{abstract}
-The partitioned test circuit of Phase 3 is timed step by step in four implementations of the same computation, from the general nodal solver to a compiled loop. The general solver needs \SI{15.2}{\micro\second} per step (median), the compiled loop \SI{12}{ns}; the difference is interpreter and call overhead, not arithmetic. Even the fastest interpreted version shows occasional steps far longer than its median, which rules out interpreted code for hard real-time execution. The note ends with questions to be settled at the start of the project.
+The partitioned test circuit of Phase 3 is timed step by step in four implementations of the same computation, from the general nodal solver to a compiled loop. The general solver needs \SI{15.2}{\micro\second} per step (median), the compiled loop \SI{12}{ns}; most of the difference is interpreter and function-call overhead. Even the fastest interpreted version shows occasional steps far longer than its median, which rules out interpreted code for hard real-time execution. The note ends with questions to be settled at the start of the project.
 \end{abstract}
 \begin{IEEEkeywords}
 Real-time simulation, electromagnetic transients, profiling, latency.
@@ -58,13 +58,13 @@ compiled & 0.012 (mean) & -- & -- & -- & --\\
 \end{figure}
 Table~\ref{tab:time} and Fig.~\ref{fig:time} summarize the measurements.
 
-\emph{Overhead, not arithmetic.} One step of this circuit requires a few tens of floating-point operations, which the compiled loop executes in \SI{12}{ns}. The generic solver takes more than 1000 times longer. According to the profile, \texttt{numpy.linalg.solve} accounts for \SI{55}{\percent} of the run time, mostly argument checking and dispatch for a $1\times1$ system, and the Python code of the step function for most of the remainder.
+One step of this circuit requires a few tens of floating-point operations, which the compiled loop executes in \SI{12}{ns}. The generic solver takes more than 1000 times longer, so the cost is dominated by overhead rather than by arithmetic. According to the profile, \texttt{numpy.linalg.solve} accounts for \SI{55}{\percent} of the run time, mostly argument checking and dispatch for a $1\times1$ system, and the Python code of the step function for most of the remainder.
 
-\emph{Caching is not sufficient.} Reusing one factorization per switch state halves the median, but every step still exceeds a \SI{5}{\micro\second} budget. Writing the update out with scalars brings the median to \SI{0.28}{\micro\second}.
+Reusing one factorization per switch state halves the median, but every step still exceeds a \SI{5}{\micro\second} budget. Writing the update out with scalars brings the median to \SI{0.28}{\micro\second}.
 
-\emph{The tail decides.} Even the scalar loop has steps of up to \SI{26}{\micro\second}, and single steps of the other versions take hundreds of microseconds, as is typical of garbage collection and operating-system scheduling. A fixed-step real-time simulator requires a bound on the worst case, which interpreted code on a general-purpose operating system cannot provide. Compiled code on isolated processor cores, or an FPGA with a fixed schedule~\cite{chen}, is required.
+For real-time operation, however, the distribution tail matters more than the median. Even the scalar loop has steps of up to \SI{26}{\micro\second}, and single steps of the other versions take hundreds of microseconds, as is typical of garbage collection and operating-system scheduling. A fixed-step real-time simulator requires a bound on the worst case, which interpreted code on a general-purpose operating system cannot provide. Compiled code on isolated processor cores, or an FPGA with a fixed schedule~\cite{chen}, is required.
 
-\emph{Scaling.} For larger subsystems the arithmetic per step grows with the network size (sparse solution and history updates). With a fixed set of switch states the factorizations can be prepared in advance, as in the cached version, leaving forward and backward substitution in each step.
+For larger subsystems the arithmetic per step grows with the network size (sparse solution and history updates). With a fixed set of switch states the factorizations can be prepared in advance, as in the cached version, leaving forward and backward substitution in each step.
 
 \section{Questions for the First Week}
 \begin{enumerate}

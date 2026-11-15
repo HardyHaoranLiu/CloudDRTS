@@ -13,7 +13,7 @@
 \begin{document}
 \title{A Nodal Electromagnetic Transient Solver\\With Trapezoidal Companion Models}
 \author{\IEEEauthorblockN{Haoran Liu}
-\IEEEauthorblockA{CloudDRTS preparation, Phase 2\quad November 2026}}
+\IEEEauthorblockA{CloudDRTS preparation, Phase 2}}
 \maketitle
 
 \begin{abstract}
@@ -24,7 +24,7 @@ Electromagnetic transients, nodal analysis, trapezoidal rule, Bergeron line mode
 \end{IEEEkeywords}
 
 \section{Introduction}
-EMT programs solve the network at a fixed time step with each dynamic element replaced by a discrete companion model~\cite{dommel,watson}. This solver is the basis of the partitioning study of Phase~3, which relies on the decoupling property of the Bergeron line. Its accuracy is therefore established here against closed-form solutions before it is used.
+EMT programs solve the network at a fixed time step with each dynamic element replaced by a discrete companion model~\cite{dommel,watson}. This solver is the basis of the partitioning study of Phase~3, which relies on the decoupling property of the Bergeron line. Its accuracy is checked here against closed-form solutions before it is used.
 
 \section{Method}
 \subsection{Companion models and nodal equations}
@@ -82,7 +82,7 @@ All cases are driven by a \SI{1}{V} step at $t=0$. The RC, RL and series RLC (un
 v_2(t)=0.6\bigl(1-6^{-n(t)}\bigr),\qquad n(t)=\Bigl\lfloor\frac{t-\tau}{2\tau}\Bigr\rfloor+1 .
 \end{equation}
 
-Table~\ref{tab:val} and Figs.~\ref{fig:wave}--\ref{fig:conv} summarize the results. The orders are fitted over steps of 100, 50, 25, 10 and \SI{5}{\micro\second}. All lumped cases converge with order 2.00, as expected for the trapezoidal rule; reducing the step from 50 to \SI{5}{\micro\second} lowers the error by a factor of 100. In the switched case, capacitor voltage and inductor current are exactly continuous across both events. If the second solve at the switching instants is omitted, the same case converges only with order 1.00, and the error at \SI{5}{\micro\second} is 40 times larger. The line is reproduced to round-off at both steps, because the Bergeron model of a lossless line has no truncation error when $\tau$ is a multiple of $\Delta t$; any line error in Phase~3 is therefore caused by the interface and not by the line model. Finally, for an undamped LC circuit the stored energy stays constant within a relative $6\times10^{-13}$ over 4000 steps, a known property of the trapezoidal rule.
+Table~\ref{tab:val} and Figs.~\ref{fig:wave}--\ref{fig:conv} summarize the results. The orders are fitted over steps of 100, 50, 25, 10 and \SI{5}{\micro\second}. All lumped cases converge with order 2.00, as expected for the trapezoidal rule; reducing the step from 50 to \SI{5}{\micro\second} lowers the error by a factor of 100. In the switched case, capacitor voltage and inductor current are exactly continuous across both events. If the second solve at the switching instants is omitted, the same case converges only with order 1.00, and the error at \SI{5}{\micro\second} is 40 times larger. The line is reproduced to round-off at both steps, because the Bergeron model of a lossless line has no truncation error when $\tau$ is a multiple of $\Delta t$; any line error in Phase~3 comes from the interface and not from the line model. For an undamped LC circuit the stored energy stays constant within a relative $6\times10^{-13}$ over 4000 steps, a known property of the trapezoidal rule.
 
 \section{Conclusion}
 The solver is second-order accurate for lumped elements, including switching events when the switching instant is solved a second time, and exact for the lossless line. Its limits are a fixed step, switching only at step boundaries, travel times rounded to whole steps, and single-phase lossless lines. Interruption of an inductor current is not supported, so the numerical oscillations of the trapezoidal rule in that situation are not addressed.

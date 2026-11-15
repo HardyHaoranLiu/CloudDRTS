@@ -13,7 +13,7 @@
 \begin{document}
 \title{Splitting an EMT Simulation at a Line:\\Interface Delay and Thevenin Equivalents}
 \author{\IEEEauthorblockN{Haoran Liu}
-\IEEEauthorblockA{CloudDRTS preparation, Phase 3\quad November 2026}}
+\IEEEauthorblockA{CloudDRTS preparation, Phase 3}}
 \maketitle
 
 \begin{abstract}
@@ -87,9 +87,9 @@ The waveforms before \SI{20}{ms} are then exact sinusoids; their fitted phasors 
 The split and unsplit solutions agree within \SI{2e-14}{V}. Because $\tau\ge\Delta t$, the line already decouples the nodal equations of the two sides, so cutting there involves no approximation. In real time the travel time is also a latency budget: the value needed at step $n$ is produced at step $n-N$, so communication latency up to $\tau-\Delta t\approx\SI{245}{\micro\second}$, one step being reserved for computation, has no effect on accuracy.
 
 \subsection{Added delay}
-By (1), extra delay lengthens the line. The coupled simulation therefore stays passive and stable for any $k$, unlike voltage--current interfaces~\cite{ren2008}, but the result changes (Figs.~\ref{fig:wave} and~\ref{fig:delay}). In steady state the error grows almost linearly with the delay: \SI{0.15}{\percent} per step, \SI{3.0}{\percent} at \SI{100}{\micro\second} and \SI{12}{\percent} at \SI{400}{\micro\second} at \SI{60}{Hz}. It scales with $\omega k\Delta t$ (Fig.~\ref{fig:freq}): at \SI{100}{\micro\second} it reaches \SI{24}{\percent} at \SI{400}{Hz} and \SI{77}{\percent} at \SI{1200}{Hz}, close to the value $2\sin(\omega k\Delta t/2)$ of a pure time shift (3.8, 25 and \SI{74}{\percent}). The admissible delay is therefore set by the highest frequency the study must reproduce.
+By (1), extra delay lengthens the line. The coupled simulation stays passive and stable for any $k$, unlike voltage--current interfaces~\cite{ren2008}, but the result changes (Figs.~\ref{fig:wave} and~\ref{fig:delay}). In steady state the error grows almost linearly with the delay: \SI{0.15}{\percent} per step, \SI{3.0}{\percent} at \SI{100}{\micro\second} and \SI{12}{\percent} at \SI{400}{\micro\second} at \SI{60}{Hz}. It scales with $\omega k\Delta t$ (Fig.~\ref{fig:freq}): at \SI{100}{\micro\second} it reaches \SI{24}{\percent} at \SI{400}{Hz} and \SI{77}{\percent} at \SI{1200}{Hz}, close to the value $2\sin(\omega k\Delta t/2)$ of a pure time shift (3.8, 25 and \SI{74}{\percent}). The admissible delay depends on the highest frequency the study must reproduce.
 
-After the switching event, the reflections between the two line ends arrive $2k\Delta t$ later in every round trip (Fig.~\ref{fig:wave}b). One step of delay already gives a transient error of \SI{1.9}{\percent}, against \SI{0.15}{\percent} in steady state, and \SI{100}{\micro\second} gives \SI{7.2}{\percent}. The pointwise maximum is not a useful measure here: one step of delay already gives \SI{27}{V}, the height of a wavefront arriving one sample late.
+After the switching event, the reflections between the two line ends arrive $2k\Delta t$ later in every round trip (Fig.~\ref{fig:wave}b). One step of delay already gives a transient error of \SI{1.9}{\percent}, against \SI{0.15}{\percent} in steady state, and \SI{100}{\micro\second} gives \SI{7.2}{\percent}. The pointwise maximum error is of limited use for such waveforms; with one step of delay it already amounts to \SI{27}{V}, the height of a wavefront arriving one sample late.
 
 \begin{figure}[!t]
 \centering\includegraphics[width=\columnwidth]{phase3_error_vs_delay.pdf}
@@ -112,9 +112,9 @@ Phasor equivalent & 0.0 / 3.0 / 12.1 & 2.9 / 7.2 / 17.6\\
 \end{table}
 
 \subsection{Thevenin equivalents}
-Table~\ref{tab:err} compares the variants. The resistive equivalent has a steady-state error of \SI{5.2}{\percent} without any delay (\SI{33}{\percent} at \SI{400}{Hz}, \SI{85}{\percent} at \SI{1200}{Hz}). With delay this error first decreases, to \SI{1.0}{\percent} at \SI{200}{\micro\second}, because the phase lag of the delay partly cancels the phase error of the equivalent (Figs.~\ref{fig:delay}a and~\ref{fig:freq}). The cancellation depends on frequency and says nothing about the interface.
+Table~\ref{tab:err} compares the variants. The resistive equivalent has a steady-state error of \SI{5.2}{\percent} without any delay (\SI{33}{\percent} at \SI{400}{Hz}, \SI{85}{\percent} at \SI{1200}{Hz}). With delay this error first decreases, to \SI{1.0}{\percent} at \SI{200}{\micro\second}, because the phase lag of the delay partly cancels the phase error of the equivalent (Figs.~\ref{fig:delay}a and~\ref{fig:freq}). This cancellation depends on frequency and does not reflect a property of the interface.
 
-The phasor equivalent is exact in steady state at the source frequency ($10^{-6}$\,\% from the discretization), so with delay its steady-state error equals that of the full split. It fails during transients, with \SI{2.9}{\percent} error without delay (\SI{4.4}{\percent} at \SI{400}{Hz}). Because of $C$, side A acts as a short circuit for steep wavefronts, whereas the equivalent presents \SI{16.6}{\ohm}; the reflections at side A are therefore not reproduced (Fig.~\ref{fig:wave}b). After each event its series capacitor also retains a DC offset that decays with $(R_\mathrm{th}+R_L)C_\mathrm{th}\approx\SI{0.25}{s}$, visible in Fig.~\ref{fig:wave}c after \SI{35}{ms}.
+The phasor equivalent is exact in steady state at the source frequency ($10^{-6}$\,\% from the discretization), so with delay its steady-state error equals that of the full split. It fails during transients, with \SI{2.9}{\percent} error without delay (\SI{4.4}{\percent} at \SI{400}{Hz}). Because of $C$, side A acts as a short circuit for steep wavefronts, whereas the equivalent presents \SI{16.6}{\ohm}; so the reflections at side A are not reproduced (Fig.~\ref{fig:wave}b). After each event its series capacitor also retains a DC offset that decays with $(R_\mathrm{th}+R_L)C_\mathrm{th}\approx\SI{0.25}{s}$, visible in Fig.~\ref{fig:wave}c after \SI{35}{ms}.
 
 \begin{figure}[!t]
 \centering\includegraphics[width=\columnwidth]{phase3_frequency.pdf}
@@ -123,7 +123,7 @@ The phasor equivalent is exact in steady state at the source frequency ($10^{-6}
 \end{figure}
 
 \subsection{Model error and delay error}
-The two error sources do not add. For the resistive equivalent at \SI{100}{\micro\second}, the transient error caused by the equivalent alone is \SI{5.1}{\percent} and that caused by the delay alone, measured against the same equivalent without delay, is \SI{5.5}{\percent}, yet the total is \SI{6.4}{\percent}. All three quantities (total, delay only, model only) are therefore recorded separately for every case.
+The two error sources do not add. For the resistive equivalent at \SI{100}{\micro\second}, the transient error caused by the equivalent alone is \SI{5.1}{\percent} and that caused by the delay alone, measured against the same equivalent without delay, is \SI{5.5}{\percent}, yet the total is \SI{6.4}{\percent}. For this reason the total error, the error due to delay alone and the error due to the equivalent alone are recorded separately for every case.
 
 \section{Proposal for the Kundur Two-Area System}
 \begin{itemize}
@@ -135,7 +135,7 @@ The two error sources do not add. For the resistive equivalent at \SI{100}{\micr
 \end{itemize}
 
 \section{Conclusion}
-Cutting at a line is exact while the latency stays below the travel time minus one step; further delay acts as extra line length, stable but increasingly inaccurate with frequency. Phasor equivalents are exact only in steady state, resistive ones not even there, so equivalents for transient studies need the frequency dependence of the replaced network.
+Cutting at a line is exact while the latency stays below the travel time minus one step. Further delay acts as additional line length; the simulation remains stable, but its accuracy decreases with frequency. A phasor equivalent is exact only in steady state and a resistive equivalent not even in steady state, so equivalents for transient studies need to represent the frequency dependence of the replaced network.
 
 \begin{thebibliography}{1}
 \bibitem{syed} M.~H. Syed \emph{et al.}, ``Real-time coupling of geographically distributed research infrastructures: Taxonomy, overview, and real-world smart grid applications,'' \emph{IEEE Trans. Smart Grid}, vol.~12, no.~2, pp.~1747--1760, 2021.
