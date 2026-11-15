@@ -1,0 +1,18 @@
+{
+  "split_vs_unsplit_max_difference_V_60Hz": 1.7763568394002505e-14,
+  "split_vs_unsplit_max_difference_V_400Hz": 7.105427357601002e-15,
+  "split_vs_unsplit_max_difference_V_1200Hz": 0.0,
+  "max_fit_minus_discrete_prediction_V": 6.547034153566208e-11,
+  "equivalents_60Hz": {
+    "static": {
+      "gain": 0.6666666666666666,
+      "r": 16.666666666666668
+    },
+    "phasor": {
+      "gain_abs": 0.6653546030024298,
+      "gain_angle_deg": -3.5952737798681764,
+      "r": 16.60112804011954,
+      "c_uF": 2543.0295910584446
+    }
+  }
+}
