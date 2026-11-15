@@ -18,7 +18,7 @@
 \maketitle
 
 \begin{abstract}
-The two-area, four-machine benchmark system is modelled with six-state synchronous machines, subjected to a three-phase fault and linearized numerically. The inter-area mode lies at \SI{0.5447}{Hz} with \SI{3.58}{\percent} damping and the two local modes at \SI{1.0806}{Hz} and \SI{1.1113}{Hz}. With the machine model and the saturation treatment of the textbook example, its 22 nonzero eigenvalues are reproduced within \SI{0.012}{s^{-1}}. For the symmetric case of Klein, Rogers and Kundur the computed inter-area frequency is \SI{11.5}{\percent} lower than published; the unstated connection impedance of the units is shown to be the most likely cause.
+The two-area, four-machine benchmark system is modelled with six-state synchronous machines, subjected to a three-phase fault and linearized numerically. The inter-area mode lies at \SI{0.5447}{Hz} with \SI{3.58}{\percent} damping and the two local modes at \SI{1.0806}{Hz} and \SI{1.1113}{Hz}. With the machine model and the saturation treatment of the textbook example, its 22 nonzero eigenvalues are reproduced within \SI{0.012}{s^{-1}}. On the network of Klein, Rogers and Kundur, the computed inter-area frequencies of all four published cases are 3.6--\SI{4.0}{\percent} higher than published and the damping ratios agree within 0.5 percentage points; the mode shape agrees with the published one.
 \end{abstract}
 \begin{IEEEkeywords}
 Inter-area oscillation, modal analysis, small-signal stability, two-area system.
@@ -78,35 +78,30 @@ Without saturation the model also has a slow real eigenvalue at $+\SI{0.0049}{s^
 \caption{Three-phase fault at bus 8, \SIrange{1.00}{1.08}{s} (shaded): (a) rotor angles relative to the centre of inertia (COI), (b) power from bus 7 to bus 8, (c) COI frequency deviation.}
 \label{fig:fault}
 \end{figure}
-A three-phase fault ($R_f=10^{-4}$~p.u.) is applied at bus~8, in the middle of the tie, from 1.00 to \SI{1.08}{s}. The equations are integrated with DOP853 (relative tolerance $10^{-8}$), restarted at both switching instants. The largest pre-fault speed deviation, \SI{3e-13}{Hz}, confirms a consistent initial state. During the fault the bus-8 voltage falls to 0.0016~p.u. and the tie power from 400 to about \SI{65}{MW} (Fig.~\ref{fig:fault}). After clearing, the response is dominated by the slowly decaying \SI{0.54}{Hz} inter-area swing, with the local modes visible during the first two seconds. Without governors the energy imbalance during the fault is not corrected, and the COI frequency ends \SI{0.37}{Hz} above nominal; so the rotor angles are shown relative to the COI.
+A three-phase fault ($R_f=10^{-4}$~p.u.) is applied at bus~8, in the middle of the tie, from 1.00 to \SI{1.08}{s}. The equations are integrated with DOP853 (relative tolerance $10^{-8}$), restarted at both switching instants. The largest pre-fault speed deviation, \SI{3e-13}{Hz}, confirms a consistent initial state. During the fault the bus-8 voltage falls to 0.0016~p.u. and the tie power from 400 to about \SI{65}{MW} (Fig.~\ref{fig:fault}). After clearing, the response is dominated by the slowly decaying \SI{0.54}{Hz} inter-area swing, with the local modes visible during the first two seconds. Without governors the energy imbalance during the fault is not corrected, and the COI frequency ends \SI{0.37}{Hz} above nominal, so the rotor angles are shown relative to the COI.
 
 \section{Comparison With Klein, Rogers, and Kundur}
 \begin{table}[!t]
-\caption{Inter-Area Mode of the Symmetric Zero-Transfer Cases, Given as $f$ (Hz) / $\zeta$ (\%)}
+\caption{Inter-Area Mode of the Symmetric Zero-Transfer Cases of~\cite{klein}, Given as $f$ (Hz) / $\zeta$ (\%)}
 \label{tab:klein}
-\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\centering\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
-Excitation, ties & \cite{klein} & Textbook network & No transformers\\
+Excitation, ties & \cite{klein} & This model & $\Delta f$\\
 \midrule
-Manual, 1 & 0.481 / 2.3 & 0.426 / 4.5 & 0.499 / 1.9\\
-Static, 1 & 0.513 / 0.2 & 0.487 / $-0.8$ & 0.534 / 0.7\\
-Static, 2 & 0.661 / 1.1 & 0.628 / $-0.3$ & 0.687 / 1.6\\
-Static, 3 & 0.748 / 1.8 & 0.710 / 0.1 & 0.776 / 2.2\\
+Manual, 1 & 0.481 / 2.3 & 0.499 / 1.9 & $+\SI{3.6}{\percent}$\\
+Static, 1 & 0.513 / 0.2 & 0.534 / 0.7 & $+\SI{4.0}{\percent}$\\
+Static, 2 & 0.661 / 1.1 & 0.687 / 1.6 & $+\SI{3.9}{\percent}$\\
+Static, 3 & 0.748 / 1.8 & 0.776 / 2.2 & $+\SI{3.7}{\percent}$\\
 \bottomrule
 \end{tabular}
 \end{table}
-\begin{figure}[!t]
-\centering\includegraphics[width=\columnwidth]{phase1_klein.pdf}
-\caption{Inter-area mode of the four cases of Table~\ref{tab:klein} against the step-up transformer reactance. Dotted: values of~\cite{klein}; diamonds: where each curve reaches them.}
-\label{fig:klein}
-\end{figure}
-Reference~\cite{klein} reports only the inter-area mode. Its Table 2 gives \SI{0.481}{Hz} and $\zeta=0.023$ for the symmetric system (\SI{1400}{MW} of generation and \SI{1367}{MW} of constant-impedance load per area, no transfer) with manual excitation and one tie circuit; its Table 1 gives the same mode with static exciters ($K_A=200$, $T_R=\SI{0.01}{s}$, no transient gain reduction) for three, two and one tie circuits.
+Reference~\cite{klein} reports only the inter-area mode. Its Table 2 gives \SI{0.481}{Hz} and $\zeta=0.023$ for the symmetric system (\SI{1400}{MW} of generation and \SI{1367}{MW} of constant-impedance load per area, no transfer) with manual excitation and one tie circuit; its Table 1 gives the same mode with fast static exciters ($K_A=200$, $T_R=\SI{0.01}{s}$) for three, two and one tie circuits. That Table 1 uses exciters without transient gain reduction follows from its one-circuit value, which equals the corresponding entry of Table 2. The network of~\cite[Fig.~1]{klein} has the line data of the textbook network but no step-up transformers; the units are connected directly to their buses, all units have $H=\SI{6.5}{s}$, and shunt capacitors are only said to have been added as necessary. These four cases are computed for this network with \SI{200}{Mvar} per area.
 
-On the textbook network with one tie circuit and \SI{200}{Mvar} per area, the symmetric case yields \SI{0.4255}{Hz} and \SI{4.47}{\percent}, i.e., \SI{11.5}{\percent} below~\cite{klein}. Varying the shunt compensation between 100 and \SI{350}{Mvar} per area moves the frequency only within \SIrange{0.415}{0.441}{Hz}. One difference in the network data remains: Fig.~1 of~\cite{klein} shows the units connected directly to the area buses and gives no transformer data, whereas the textbook network has 0.15~p.u. step-up transformers. For all four published cases the two representations bracket both the published frequency and the damping ratio (Table~\ref{tab:klein}). Sweeping the transformer reactance (Fig.~\ref{fig:klein}), the published frequencies are reached at 0.070--0.075~p.u. with static exciters and at 0.040~p.u. with manual excitation. The most likely cause of the difference is thus the connection impedance of the units, which~\cite{klein} does not state. An exact comparison requires the original data of~\cite{klein}.
+Table~\ref{tab:klein} shows that all four frequencies are 3.6--\SI{4.0}{\percent} higher than published, and that the damping ratios agree within 0.5 percentage points. The nearly constant ratio, independent of the number of tie circuits and of the exciter type, points to a factor common to all cases rather than to the tie. Data not given in~\cite{klein} were varied to check this: shunt compensation of 100 or \SI{300}{Mvar} per area, or neglecting line charging, changes the frequencies by at most \SI{1.1}{\percent}, and neglecting line resistance by at most \SI{2.6}{\percent}. None of these variations removes the offset in all four cases; the remaining offsets range from 0.9 to \SI{5.2}{\percent}. The mode shape agrees with~\cite[Fig.~2]{klein}: the units of one area swing in exact anti-phase with those of the other, and the outer units G1 and G3 oscillate with a larger amplitude than the inner units (ratio 0.91). For reference, the textbook network with its 0.15~p.u. step-up transformers gives frequencies \SIrange{4.9}{11.5}{\percent} below~\cite{klein}.
 
 \section{Conclusion}
-The model reproduces the textbook modes with the saturation treatment of~\cite{kundur}; the gap to~\cite{klein} is traced to unpublished network data. The textbook network, whose data are complete, is proposed as the reference for the partitioned studies.
+The model reproduces the textbook modes with the saturation treatment of~\cite{kundur}. On the network of~\cite{klein}, damping ratios and mode shape agree, while the inter-area frequency is systematically about \SI{4}{\percent} higher; the cause has not been identified from the published data. The textbook network, whose data are complete, is proposed as the reference for the partitioned studies.
 
 \begin{thebibliography}{1}
 \bibitem{kundur} P.~Kundur, \emph{Power System Stability and Control}. New York: McGraw-Hill, 1994.

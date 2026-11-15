@@ -16,12 +16,14 @@ TRANSFORMERS = [(1, 5), (2, 6), (3, 11), (4, 10)]
 LINES = [(5, 6, 25), (6, 7, 10), (7, 8, 110), (8, 9, 110), (9, 10, 10), (10, 11, 25)]
 
 
-def admittance(transformer_x=0.15, tie_circuits=2, shunt=(2.0, 3.5)):
+def admittance(transformer_x=0.15, tie_circuits=2, shunt=(2.0, 3.5), z_km=Z_KM, b_km=B_KM):
     """Bus admittance matrix.
 
-    transformer_x: step-up transformer reactance on the 900 MVA base.
+    transformer_x: step-up transformer reactance on the 900 MVA base; a very
+    small value connects the units directly to their buses.
     tie_circuits: parallel circuits on the two 110 km sections 7-8 and 8-9.
     shunt: capacitor susceptance at buses 7 and 9 (p.u. on 100 MVA).
+    z_km, b_km: line series impedance and charging per km.
     """
     Y = np.zeros((11, 11), complex)
 
@@ -36,7 +38,7 @@ def admittance(transformer_x=0.15, tie_circuits=2, shunt=(2.0, 3.5)):
         branch(a, b, MBASE / (1j * transformer_x))
     for a, b, km in LINES:
         n = tie_circuits if km == 110 else 1
-        branch(a, b, n / (km * Z_KM), 1j * n * km * B_KM)
+        branch(a, b, n / (km * z_km), 1j * n * km * b_km)
     Y[6, 6] += 1j * shunt[0]
     Y[8, 8] += 1j * shunt[1]
     return Y
@@ -141,8 +143,8 @@ def textbook_case():
     return case
 
 
-def symmetric_case(transformer_x=0.15, tie_circuits=1, shunt=2.0):
-    Y = admittance(transformer_x, tie_circuits, (shunt, shunt))
+def symmetric_case(transformer_x=0.15, tie_circuits=1, shunt=2.0, z_km=Z_KM, b_km=B_KM):
+    Y = admittance(transformer_x, tie_circuits, (shunt, shunt), z_km, b_km)
     V, load, residual = symmetric_power_flow(Y)
     case = Case(Y, load, V, np.full(4, 6.5), active_exponent=2)
     case.pf_residual = residual
